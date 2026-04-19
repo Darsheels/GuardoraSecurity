@@ -31,26 +31,6 @@
   cursor: pointer;
 }
 
-.Subtitle {
-  position: absolute;
-  top: 70px;
-  left: 0;
-  width: 400px;
-  color: rgb(255, 253, 253);
-  font: 14px Arial, sans-serif;
-  background-color: transparent;
-  padding: 8px 12px;
-  border-radius: 4px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 10;
-}
-
-.Title:hover + .Subtitle {
-  opacity: 1;
-}
-
 .Hero-Items {
   display: flex;
   gap: 20px;
@@ -69,9 +49,28 @@
 }
 
 .Hero-Item:hover {
-  transition: opacity 1s ease;
-  background-color: rgb(92, 92, 92);
   color: rgb(186, 186, 186);
   cursor: pointer;
   border-radius: 30px;
+}
+
+.Workings {
+  padding: 50px;
+  background-color: rgb(24, 24, 24);
+  color: rgb(186, 186, 186);
+  width: 800px;
+  border-radius: 100px;
+  margin: 60px 10px;
+}
+
+.About {
+  font: 18px Arial, sans-serif;
+  background-color: transparent;
+}
+
+.Header {
+  font: bold 30px Arial, sans-serif;
+  background-color: transparent;
+  margin: 0px;
+  color: white;
 }

@@ -8,7 +8,7 @@ export default function Hero() {
                 <div className="Hero-Item">QR Scan</div>
                 <div className="Hero-Item">URL Scan</div>
             </div>
-
+            
         </div>
     )
 
