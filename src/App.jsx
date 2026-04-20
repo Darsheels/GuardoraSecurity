@@ -1,11 +1,11 @@
 import Hero from "./components/Hero"
-import Workings from "./components/Workings"
+import Header from "./components/Header"
 
 export default function App() {
   return (
     <>
+      <Header></Header>
       <Hero></Hero>
-      <Workings></Workings>
     </>
   )
 }

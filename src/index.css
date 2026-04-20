@@ -6,24 +6,30 @@
   user-select: none;
 }
 
-.Hero {
-  height: 80px;
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.Header {
+  height: 60px;
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 20px;
+  gap: 10px;
+  padding: 0 15px;
   background-color: rgb(0, 0, 0);
   border-bottom: 1px solid rgb(92, 92, 92);
+  flex-wrap: wrap;
 }
 
 .Title {
   color: rgb(255, 255, 255);
   margin: 0;
   background-color: transparent;
-  font: bold 30px Arial, sans-serif;
-  width: 330px;
+  font: bold clamp(18px, 5vw, 25px) Arial, sans-serif;
   position: relative;
+  white-space: nowrap;
 }
 
 .Title:hover {
@@ -31,46 +37,86 @@
   cursor: pointer;
 }
 
-.Hero-Items {
+.Header-Items {
   display: flex;
-  gap: 20px;
+  gap: 8px;
   margin-left: auto;
   background: transparent;
+  flex-wrap: wrap;
 }
 
-.Hero-Item {
-  font: 20px Arial, sans-serif;
+.Header-Item {
+  font: clamp(14px, 3vw, 20px) Arial, sans-serif;
   background-color: transparent;
   color: white;
   margin: 0;
-  padding: 10px 16px;
-  width:  150px;
+  padding: 8px 12px;
   text-align: center;
+  white-space: nowrap;
 }
 
-.Hero-Item:hover {
+.Header-Item:hover {
   color: rgb(186, 186, 186);
   cursor: pointer;
   border-radius: 30px;
 }
 
-.Workings {
-  padding: 50px;
+.Hero {
+  padding: clamp(20px, 5vw, 50px);
   background-color: rgb(24, 24, 24);
   color: rgb(186, 186, 186);
-  width: 800px;
-  border-radius: 100px;
-  margin: 60px 10px;
+  width: 90vw;
+  max-width: 900px;
+  border-radius: clamp(20px, 10vw, 100px);
+  margin: clamp(30px, 8vw, 60px) auto;
 }
 
-.About {
-  font: 18px Arial, sans-serif;
+.Hero-About {
+  font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
   background-color: transparent;
+  line-height: 1.6;
 }
 
-.Header {
-  font: bold 30px Arial, sans-serif;
+.Hero-Header {
+  font: clamp(24px, 6vw, 30px) Arial, sans-serif;
   background-color: transparent;
-  margin: 0px;
+  margin: 0 0 15px 0;
   color: white;
+}
+
+
+@media (min-width: 768px) {
+  .Header {
+    height: 80px;
+    gap: 12px;
+    padding: 0 20px;
+  }
+
+  .Title {
+    font: bold 25px Arial, sans-serif;
+  }
+
+  .Header-Items {
+    gap: 20px;
+  }
+
+  .Header-Item {
+    font: 20px Arial, sans-serif;
+    padding: 10px 16px;
+  }
+
+  .Hero {
+    padding: 50px;
+    width: 800px;
+    border-radius: 100px;
+    margin: 60px auto;
+  }
+
+  .Hero-About {
+    font: 18px Arial, sans-serif;
+  }
+
+  .Hero-Header {
+    font: bold 30px Arial, sans-serif;
+  }
 }
