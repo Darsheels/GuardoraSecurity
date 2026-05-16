@@ -1,7 +1,7 @@
 import Hero from "./components/Hero"
 import Header from "./components/Header"
 import QRScanner from "./components/QR"
-
+import URLScanner from "./components/URL"
 
 export default function App() {
   return (
@@ -9,6 +9,7 @@ export default function App() {
       <Header></Header>
       <Hero></Hero>
       <QRScanner></QRScanner>
+      <URLScanner></URLScanner>
     </>
   )
 }
