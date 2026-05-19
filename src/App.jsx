@@ -5,12 +5,12 @@ import URLScanner from "./components/URL"
 
 export default function App() {
   return (
-    <>
+    <div className="App">
       <Header></Header>
       <Hero></Hero>
       <QRScanner></QRScanner>
       <URLScanner></URLScanner>
-    </>
+    </div>
   )
 }
 

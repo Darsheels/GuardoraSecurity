@@ -1,11 +1,19 @@
 export default function Header() {
+    const nav_items = [
+        { name: "QR Scan", link: "#QRScanner" },
+        { name: "URL Scan", link: "#URLScanner" }
+    ];
+
     return (
         <header className="Header">
-            <h1 className="Title">Guardora Security</h1>
+            <a className="Title" href="#Hero">Guardora Security</a>
 
             <div className="Header-Items">
-                <div className="Header-Item">QR Scan</div>
-                <div className="Header-Item">URL Scan</div>
+                {nav_items.map((item, index) => (
+                    <a key={index} href={item.link} className="Header-Item">
+                        {item.name}
+                    </a>
+                ))}
             </div>
         </header>
     )

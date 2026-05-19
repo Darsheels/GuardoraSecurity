@@ -62,7 +62,7 @@ export default function QRScanner() {
     }, []); 
 
     return (
-        <div className="QRScanner">
+        <div id="QRScanner" className="QRScanner">
             <h1 className="QRScanner-Title">QR Scanner:</h1>
             <video ref={videoRef} className="QRScanner-Video" autoPlay playsInline></video>
             <canvas ref={canvasRef} style={{display: "none"}} className="QR Content "></canvas>
