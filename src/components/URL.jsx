@@ -2,21 +2,21 @@ import { useState } from "react";
 import validator from "validator";
 import axios from "axios";
 
-export async function URLScanner() {
+export default function URLScanner() {
     const [url, setUrl] = useState("");
     const [scanResult, setScanResult] = useState("");
 
-    const handleScan = () => {
+    const handleScan = async () => {
         if (!validator.isURL(url)) {
             setScanResult("Invalid URL format. Please enter a valid URL.");
             return;
         }
-        
+
         try {
             const response = await axios.get(
-                '/API/scan?url=${encodeURIComponent(url)}'
-            )
-
+                `http://localhost:5000/API/scan?url=${encodeURIComponent(url)}`
+            );
+            
             setScanResult(response.data.result);
 
         } catch (error) {
