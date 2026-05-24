@@ -14,7 +14,7 @@ export default function URLScanner() {
 
         try {
             const response = await axios.get(
-                `http://localhost:5000/API/scan?url=${encodeURIComponent(url)}`
+                `http://localhost:5000/API/URLscan?url=${encodeURIComponent(url)}`
             );
             
             setScanResult(response.data.result);
