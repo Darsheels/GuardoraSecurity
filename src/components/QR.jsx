@@ -1,13 +1,14 @@
 import { useEffect,useRef } from "react";
 import { useState } from "react";
 import jsQR from "jsqr";
+import axios from "axios";
 
 export default function QRScanner() {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const streamRef = useRef(null);
     const [qrCodeData, setQrCodeData] = useState(null);
-    const [status, setStatus] = useState("idle");
+    const [url, setURL] = useState(null);
 
     useEffect(() => {
         async function startCamera() {
@@ -29,7 +30,7 @@ export default function QRScanner() {
             const canvas = canvasRef.current;
             const context = canvas.getContext("2d");
 
-            const scan = () => {
+            const scan = async () => {
                 if (!videoRef.current) return;
 
                 canvas.width = videoRef.current.videoWidth;
@@ -43,8 +44,27 @@ export default function QRScanner() {
 
                 if (code) {
                     console.log("QR Code Found", code.data);
-                    setQrCodeData(code.data);
-                    setStatus("success");
+                    
+                    try {
+                        new URL(code.data);
+                    } catch {
+                        setQrCodeData("QR code does not contain a valid URL");
+                        return;
+                    }
+                    try {
+                        const response = await axios.get(
+                            `http://localhost:5000/API/URLscan?url=${encodeURIComponent(code.data)}`
+                        );
+
+                        setQrCodeData(response.data.result)
+                        setURL(code.data)
+
+                        return;
+                    } catch (error) {
+                    console.error("Error scanning URL:", error);
+                    setQrCodeData("Could not be found")
+                    }
+
                 }
                 
                 requestAnimationFrame(scan);
@@ -66,7 +86,10 @@ export default function QRScanner() {
             <h1 className="QRScanner-Title">QR Scanner:</h1>
             <video ref={videoRef} className="QRScanner-Video" autoPlay playsInline></video>
             <canvas ref={canvasRef} style={{display: "none"}} className="QR Content "></canvas>
-            <div className="QRScanner-Data">{qrCodeData}</div>
+            <div className="QRScanner-Data">
+                <l1>{qrCodeData}</l1>
+                <a href={url}>{url}</a>
+            </div>
         </div>
     );
 }

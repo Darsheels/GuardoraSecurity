@@ -40,7 +40,7 @@ export async function ScanURL(req,res) {
       }
 
       return res.json({
-          result: "URL appears safe"
+          result: "URL appears safe",
       });
 
     } catch (error) {
