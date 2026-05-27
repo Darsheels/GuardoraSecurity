@@ -56,7 +56,7 @@ export default function QRScanner() {
                             `http://localhost:5000/API/URLscan?url=${encodeURIComponent(code.data)}`
                         );
 
-                        setQrCodeData(response.data.result)
+                        setQrCodeData(response.data)
                         setURL(code.data)
 
                         return;
@@ -64,9 +64,7 @@ export default function QRScanner() {
                     console.error("Error scanning URL:", error);
                     setQrCodeData("Could not be found")
                     }
-
                 }
-                
                 requestAnimationFrame(scan);
             };
 
@@ -87,8 +85,8 @@ export default function QRScanner() {
             <video ref={videoRef} className="QRScanner-Video" autoPlay playsInline></video>
             <canvas ref={canvasRef} style={{display: "none"}} className="QR Content "></canvas>
             <div className="QRScanner-Data">
-                <l1>{qrCodeData}</l1>
-                <a href={url}>{url}</a>
+                <div className="data">{qrCodeData}</div>
+                <a href={url} className="link">{url}</a>
             </div>
         </div>
     );

@@ -120,11 +120,10 @@ html, body {
   background-color: transparent;
   margin: 30px 30px 0;
   color: white;
-
 }
 
 .QRScanner video {
-  width: 300px;
+  width: 37%;
   height: 300px;
   object-fit: cover;
   border-radius: 80%;
@@ -136,7 +135,7 @@ html, body {
   background-color: black;
   color: rgb(186, 186, 186);
   border: 1px solid rgb(92, 92, 92);
-  padding: 40px;
+  padding: 40px 50px;
   margin: -320px 0px 0px 350px;
   border-radius: 10%;
   width: 400px;

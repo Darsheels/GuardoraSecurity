@@ -32,19 +32,36 @@ export async function ScanURL(req,res) {
         }
       );
 
-      if (response.data.matches) {
+      const matches = response.data.matches || [];
+
+      if (matches.length === 0) {
         return res.json({
-          result: "Dangerous URL detected",
-          threats: response.data.matches
-        });
+          success: true,
+          url,
+          risk_level: "low",
+          status: "safe",
+          message: "No threats detected for this URL",
+          source: "Google Safe Browsing"
+        }); 
       }
 
       return res.json({
-          result: "URL appears safe",
+        success: true,
+        url,
+        risk_level: "high",
+        status: "dangerous",
+        message: "Threats detected for this URL",
+        source: "Google Safe Browsing",
+        threats: matches.map(m => ({
+          threatType: m.threatType,
+          platformType: m.platformType,
+          threatEntryType: m.threatEntryType,
+          matchedURl: m.threat?.url || url
+        }))
       });
 
     } catch (error) {
       console.error('Error scanning URL:', error.response?.data || error.message);
       res.status(500).json({ result: 'Error scanning URL' });
     }
-  };
+};

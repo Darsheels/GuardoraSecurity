@@ -17,7 +17,7 @@ export default function URLScanner() {
                 `http://localhost:5000/API/URLscan?url=${encodeURIComponent(url)}`
             );
             
-            setScanResult(response.data.result);
+            setScanResult(response.data);
 
         } catch (error) {
             console.error("Error scanning URL:", error);
