@@ -35,12 +35,13 @@ export async function ScanURL(req,res) {
       const matches = response.data.matches || [];
 
       if (matches.length === 0) {
+        console.log("API works")
         return res.json({
           success: true,
           url,
-          risk_level: "low",
-          status: "safe",
-          message: "No threats detected for this URL",
+          risk_level: "Low",
+          status: "Safe",
+          message: "No threats detected",
           source: "Google Safe Browsing"
         }); 
       }
@@ -56,7 +57,7 @@ export async function ScanURL(req,res) {
           threatType: m.threatType,
           platformType: m.platformType,
           threatEntryType: m.threatEntryType,
-          matchedURl: m.threat?.url || url
+          matchedURL: m.threat?.url || url
         }))
       });
 

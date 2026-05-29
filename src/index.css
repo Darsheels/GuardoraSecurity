@@ -131,7 +131,7 @@ html, body {
 }
 
 .QRScanner-Data {
-  font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
+  font: clamp(20px, 3.5vw, 18px) Arial, sans-serif;
   background-color: black;
   color: rgb(186, 186, 186);
   border: 1px solid rgb(92, 92, 92);

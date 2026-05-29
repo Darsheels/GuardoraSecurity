@@ -17,7 +17,15 @@ export default function URLScanner() {
                 `http://localhost:5000/API/URLscan?url=${encodeURIComponent(url)}`
             );
             
-            setScanResult(response.data);
+            const data = response.data;
+
+            setScanResult({
+                risk: data?.risk_level || "unknown",
+                status: data?.status || "unknown",
+                message: data?.message || "",
+                threats: data?.threats || "None"});
+
+            setUrl("")
 
         } catch (error) {
             console.error("Error scanning URL:", error);
@@ -35,7 +43,12 @@ export default function URLScanner() {
                 onChange={(e) => setUrl(e.target.value)}
             />
             <button className="ScanButton" onClick={handleScan}>Scan URL</button>
-            <div className="URLScanResult">{scanResult}</div>
+            <div className="URLScanResult">
+                <p>Risk:{scanResult?.risk}</p>
+                <p>Status:{scanResult?.status}</p>
+                <p>Message:{scanResult?.message}</p>
+                <p>Threats:{scanResult?.threats}</p>
+            </div>
         </div>
     );
 }

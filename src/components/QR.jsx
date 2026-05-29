@@ -55,8 +55,15 @@ export default function QRScanner() {
                         const response = await axios.get(
                             `http://localhost:5000/API/URLscan?url=${encodeURIComponent(code.data)}`
                         );
+                        
+                        const data = response.data;
 
-                        setQrCodeData(response.data)
+                        setQrCodeData({
+                        risk: data?.risk_level || "unknown",
+                        status: data?.status || "unknown",
+                        message: data?.message || "",
+                        threats: data?.threats || "None"});
+
                         setURL(code.data)
 
                         return;
@@ -85,8 +92,11 @@ export default function QRScanner() {
             <video ref={videoRef} className="QRScanner-Video" autoPlay playsInline></video>
             <canvas ref={canvasRef} style={{display: "none"}} className="QR Content "></canvas>
             <div className="QRScanner-Data">
-                <div className="data">{qrCodeData}</div>
-                <a href={url} className="link">{url}</a>
+                <p>Risk:{qrCodeData?.risk}</p>
+                <p>Status:{qrCodeData?.status}</p>
+                <p>Message:{qrCodeData?.message}</p>
+                <p>Threats:{qrCodeData?.threats}</p>
+                <a className="link" href={url}>{url}</a>
             </div>
         </div>
     );
