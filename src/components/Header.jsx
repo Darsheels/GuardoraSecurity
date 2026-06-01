@@ -6,6 +6,7 @@ export default function Header() {
 
     return (
         <header className="Header">
+            <img className="Icon" src="./src/assets/GuardoraIcon.png"></img>
             <a className="Title" href="#Hero">Guardora Security</a>
 
             <div className="Header-Items">

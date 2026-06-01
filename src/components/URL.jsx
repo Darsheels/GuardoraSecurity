@@ -25,8 +25,6 @@ export default function URLScanner() {
                 message: data?.message || "",
                 threats: data?.threats || "None"});
 
-            setUrl("")
-
         } catch (error) {
             console.error("Error scanning URL:", error);
             setScanResult("Error scanning URL. Please try again.");
