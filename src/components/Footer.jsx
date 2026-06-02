@@ -3,7 +3,7 @@ export default function Footer() {
     <footer className="Footer">
       <div className="Footer_Container">
         <p>
-          © {new Date().getFullYear()} Darsheel Salecha
+          © {new Date().getFullYear()} Guardora Security
         </p>
       </div>
     </footer>

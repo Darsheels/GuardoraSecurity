@@ -7,6 +7,7 @@ export default function QRScanner() {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const streamRef = useRef(null);
+    const scanningRef = useRef(false);
     const [qrCodeData, setQrCodeData] = useState(null);
     const [url, setURL] = useState(null);
 
@@ -42,7 +43,8 @@ export default function QRScanner() {
 
                 const code = jsQR(imageData.data, canvas.width, canvas.height);
 
-                if (code) {
+                if (code && !scanningRef.current) {
+                    scanningRef.current = true;
                     console.log("QR Code Found", code.data);
                     
                     try {
@@ -66,10 +68,11 @@ export default function QRScanner() {
 
                         setURL(code.data)
 
-                        return;
-                    } catch (error) {
-                    console.error("Error scanning URL:", error);
-                    setQrCodeData("Could not be found")
+                    } finally {
+                        setTimeout(() => {
+                            scanningRef.current = false;
+                            console.log("Ready for next scan");
+                        }, 2000);
                     }
                 }
                 requestAnimationFrame(scan);
@@ -85,7 +88,7 @@ export default function QRScanner() {
            }
          };
     }, []); 
-
+    
     return (
         <div id="QRScanner" className="QRScanner">
             <h1 className="QRScanner-Title">QR Scanner:</h1>
