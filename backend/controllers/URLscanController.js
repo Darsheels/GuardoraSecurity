@@ -46,6 +46,19 @@ export async function ScanURL(req,res) {
         }); 
       }
 
+      if (matches.length === 1) {
+        if (matches.some(m => m.threatType === "UNWANTED_SOFTWARE")) {
+          return res.json({
+            success: true,
+            url,
+            risk_level: "Medium",
+            status: "Potentially Unwanted",
+            message: "This URL is associated with unwanted software",
+            source: "Google Safe Browsing"
+          });
+        }
+      }
+      
       return res.json({
         success: true,
         url,

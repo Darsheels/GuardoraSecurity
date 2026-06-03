@@ -2,6 +2,8 @@ import { useEffect,useRef } from "react";
 import { useState } from "react";
 import jsQR from "jsqr";
 import axios from "axios";
+import SafeShield from "./SafeShield";
+import UnsafeShield from "./UnsafeShield";
 
 export default function QRScanner() {
     const videoRef = useRef(null);
@@ -10,6 +12,7 @@ export default function QRScanner() {
     const scanningRef = useRef(false);
     const [qrCodeData, setQrCodeData] = useState(null);
     const [url, setURL] = useState(null);
+    const [status, setStatus] = useState(null);
 
     useEffect(() => {
         async function startCamera() {
@@ -51,6 +54,7 @@ export default function QRScanner() {
                         new URL(code.data);
                     } catch {
                         setQrCodeData("QR code does not contain a valid URL");
+                        scanningRef.current = false;
                         return;
                     }
                     try {
@@ -65,7 +69,8 @@ export default function QRScanner() {
                         status: data?.status || "unknown",
                         message: data?.message || "",
                         threats: data?.threats || "None"});
-
+                        
+                        setStatus(data?.status || "unknown");
                         setURL(code.data)
 
                     } finally {
@@ -99,7 +104,18 @@ export default function QRScanner() {
                 <p>Status:{qrCodeData?.status}</p>
                 <p>Message:{qrCodeData?.message}</p>
                 <p>Threats:{qrCodeData?.threats}</p>
-                <a className="link" href={url}>{url}</a>
+                <a className="link" href={url} rel="noopener noreferrer" target="_blank">{url}</a>
+
+                {status === "Safe" && (
+                    <>
+                    <SafeShield />
+                    </>
+                )}
+                {status === "dangerous" && (
+                    <>
+                    <UnsafeShield />
+                    </>
+                )}
             </div>
         </div>
     );

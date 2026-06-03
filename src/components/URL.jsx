@@ -5,6 +5,7 @@ import axios from "axios";
 export default function URLScanner() {
     const [url, setUrl] = useState("");
     const [scanResult, setScanResult] = useState("");
+    const Stat
 
     const handleScan = async () => {
         if (!validator.isURL(url)) {

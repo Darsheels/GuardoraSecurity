@@ -43,6 +43,10 @@ html, body {
   cursor: pointer;
 }
 
+.Title:active {
+  color: rgb(92, 92, 92);
+}
+
 .Icon {
   margin-top: -10;
 }
@@ -85,9 +89,14 @@ html, body {
 }
 
 .Header-Item:hover {
+  background-color: rgb(35, 35, 35);
   color: rgb(186, 186, 186);
   cursor: pointer;
   border-radius: 30px;
+}
+
+.Header-Item:active {
+  background-color: rgb(92, 92, 92);
 }
 
 .Hero {
@@ -198,6 +207,10 @@ html, body {
   background-color: rgb(60, 60, 60);
 }
 
+.ScanButton:active {
+  background-color: rgb(92, 92, 92);
+}
+
 .URLScanResult {
   font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
   background-color: black;
@@ -224,6 +237,78 @@ html, body {
   flex-wrap: wrap;
   z-index: 1000;
   color: white;
+}
+
+@keyframes drawShield {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.SafeShield {
+  background:transparent;
+}
+
+.Shield {
+  fill: none;
+  stroke: #22c55e;
+  stroke-width: 4;
+  stroke-dasharray: 250;
+  stroke-dashoffset: 250;
+  animation: drawShield 0.8s ease forwards;
+}
+
+.Check {
+  fill: none;
+  stroke: #22c55e;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: drawCheck 0.4s ease forwards;
+  animation-delay: 0.8s;
+}
+
+@keyframes drawDangShield {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drawDangCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.UnsafeShield {
+  background:transparent;
+}
+
+.DangShield {
+  fill: none;
+  stroke: #ef4444;
+  stroke-width: 4;
+  stroke-dasharray: 250;
+  stroke-dashoffset: 250;
+  animation: drawDangShield 0.8s ease forwards;
+}
+
+.Cross1, .Cross2 {
+  fill: none;
+  stroke: #ef4444;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: drawDangCheck 0.4s ease forwards;
 }
 
 @media (min-width: 768px) {
