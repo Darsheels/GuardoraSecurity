@@ -161,6 +161,10 @@ html, body {
   height: 300px;
 }
 
+.link {
+  font-size: clamp(14px, 3.5vw, 18px);
+}
+
 .URLScanner {
   width: min(90vw, 800px);
   min-height: 500px;

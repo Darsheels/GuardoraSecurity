@@ -62,7 +62,7 @@ export async function ScanURL(req,res) {
       return res.json({
         success: true,
         url,
-        risk_level: "high",
+        risk_level: "High",
         status: "dangerous",
         message: "Threats detected for this URL",
         source: "Google Safe Browsing",

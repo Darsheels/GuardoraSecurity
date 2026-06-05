@@ -1,15 +1,18 @@
 import { useState } from "react";
 import validator from "validator";
 import axios from "axios";
+import SafeShield from "./SafeShield";
+import UnsafeShield from "./UnsafeShield";
 
 export default function URLScanner() {
     const [url, setUrl] = useState("");
     const [scanResult, setScanResult] = useState("");
-    const Stat
+    const [status, setStatus] = useState(null);
 
     const handleScan = async () => {
         if (!validator.isURL(url)) {
             setScanResult("Invalid URL format. Please enter a valid URL.");
+            setStatus(null);
             return;
         }
 
@@ -24,7 +27,10 @@ export default function URLScanner() {
                 risk: data?.risk_level || "unknown",
                 status: data?.status || "unknown",
                 message: data?.message || "",
-                threats: data?.threats || "None"});
+                threats: Array.isArray(data?.threats) ? data.threats : []
+            });
+
+            setStatus(data?.status || "unknown");
 
         } catch (error) {
             console.error("Error scanning URL:", error);
@@ -43,10 +49,31 @@ export default function URLScanner() {
             />
             <button className="ScanButton" onClick={handleScan}>Scan URL</button>
             <div className="URLScanResult">
-                <p>Risk:{scanResult?.risk}</p>
-                <p>Status:{scanResult?.status}</p>
-                <p>Message:{scanResult?.message}</p>
-                <p>Threats:{scanResult?.threats}</p>
+                <p>Risk: {scanResult.risk}</p>
+                <p>Status: {scanResult.status}</p>
+                <p>Message: {scanResult.message}</p>
+                <div>
+                    <p>Threats:</p>
+                    {Array.isArray(scanResult.threats) && scanResult.threats.length > 0 ? (
+                    <ul>
+                        {scanResult.threats.map((threat, index) => (
+                            <li key={index}>
+                                <strong>{threat.threatType}</strong> | {threat.platformType} | {threat.threatEntryType} | {threat.matchedURL}
+                            </li>
+                        ))}
+                    </ul>
+                    ) : (
+                        <span>None</span>
+                    )}
+                </div>
+
+                {status === "Safe" && (
+                    <SafeShield />
+                )}
+
+                {status === "dangerous" && (
+                    <UnsafeShield />
+                )}
             </div>
         </div>
     );
