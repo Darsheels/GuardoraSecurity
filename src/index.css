@@ -243,6 +243,8 @@ html, body {
   color: white;
 }
 
+
+
 @keyframes drawShield {
   to {
     stroke-dashoffset: 0;

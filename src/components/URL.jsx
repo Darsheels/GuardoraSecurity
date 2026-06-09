@@ -6,12 +6,17 @@ import UnsafeShield from "./UnsafeShield";
 
 export default function URLScanner() {
     const [url, setUrl] = useState("");
-    const [scanResult, setScanResult] = useState("");
+    const [scanResult, setScanResult] = useState(null);
     const [status, setStatus] = useState(null);
 
     const handleScan = async () => {
         if (!validator.isURL(url)) {
-            setScanResult("Invalid URL format. Please enter a valid URL.");
+            setScanResult({
+                risk: "unknown",
+                status: "invalid",
+                message: "Please enter a valid URL",
+                threats: []
+            });
             setStatus(null);
             return;
         }
@@ -27,14 +32,20 @@ export default function URLScanner() {
                 risk: data?.risk_level || "unknown",
                 status: data?.status || "unknown",
                 message: data?.message || "",
-                threats: Array.isArray(data?.threats) ? data.threats : []
+                threats: Array.isArray(data?.threats) ? data.threats : [] 
             });
 
             setStatus(data?.status || "unknown");
 
         } catch (error) {
             console.error("Error scanning URL:", error);
-            setScanResult("Error scanning URL. Please try again.");
+            setScanResult({
+                risk: "unknown",
+                status: "error",
+                message: "Error scanning URL. Please try again.",
+                threats: []
+            });
+            setStatus("error");
         }
     };
 
@@ -49,12 +60,14 @@ export default function URLScanner() {
             />
             <button className="ScanButton" onClick={handleScan}>Scan URL</button>
             <div className="URLScanResult">
-                <p>Risk: {scanResult.risk}</p>
-                <p>Status: {scanResult.status}</p>
-                <p>Message: {scanResult.message}</p>
+                <p>Risk: {scanResult?.risk}</p>
+                <p>Status: {scanResult?.status}</p>
+                <p>Message: {scanResult?.message}</p>
+                
+                {scanResult && (
                 <div>
-                    <p>Threats:</p>
-                    {Array.isArray(scanResult.threats) && scanResult.threats.length > 0 ? (
+                    <p> Threats: {scanResult.threats.length === 0 && "None"} </p>
+                    {Array.isArray(scanResult.threats) && scanResult.threats.length > 0 && (
                     <ul>
                         {scanResult.threats.map((threat, index) => (
                             <li key={index}>
@@ -62,10 +75,9 @@ export default function URLScanner() {
                             </li>
                         ))}
                     </ul>
-                    ) : (
-                        <span>None</span>
                     )}
                 </div>
+                )}
 
                 {status === "Safe" && (
                     <SafeShield />

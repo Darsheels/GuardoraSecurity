@@ -53,7 +53,14 @@ export default function QRScanner() {
                     try {
                         new URL(code.data);
                     } catch {
-                        setQrCodeData("QR code does not contain a valid URL");
+
+                    setQrCodeData({ 
+                        risk: "unknown",
+                        status: "unknown", 
+                        message: "Invalid URL", 
+                        threats: []
+                    });
+
                         scanningRef.current = false;
                         return;
                     }
@@ -68,7 +75,8 @@ export default function QRScanner() {
                         risk: data?.risk_level || "unknown",
                         status: data?.status || "unknown",
                         message: data?.message || "",
-                        threats: data?.threats || "None"});
+                        threats: Array.isArray(data?.threats) ? data.threats : [] 
+                    });
                         
                         setStatus(data?.status || "unknown");
                         setURL(code.data)
@@ -103,7 +111,22 @@ export default function QRScanner() {
                 <p>Risk:{qrCodeData?.risk}</p>
                 <p>Status:{qrCodeData?.status}</p>
                 <p>Message:{qrCodeData?.message}</p>
-                <p>Threats:{qrCodeData?.threats}</p>
+
+                {qrCodeData && (
+                <div>
+                    <p> Threats: {qrCodeData.threats.length === 0 && "None"} </p>
+                    {Array.isArray(qrCodeData.threats) && qrCodeData.threats.length > 0 && (
+                    <ul>
+                        {qrCodeData.threats.map((threat, index) => (
+                            <li key={index}>
+                                <strong>{threat.threatType}</strong> | {threat.platformType} | {threat.threatEntryType} | {threat.matchedURL}
+                            </li>
+                        ))}
+                    </ul>
+                    )}
+                </div>
+                )}
+
                 <a className="link" href={url} rel="noopener noreferrer" target="_blank">{url}</a>
 
                 {status === "Safe" && (
