@@ -3,6 +3,7 @@ import validator from "validator";
 import axios from "axios";
 import SafeShield from "./SafeShield";
 import UnsafeShield from "./UnsafeShield";
+import WarningShield from "./WarningShield";
 
 export default function URLScanner() {
     const [url, setUrl] = useState("");
@@ -22,6 +23,14 @@ export default function URLScanner() {
         }
 
         try {
+            setScanResult({
+                risk: "unknown",
+                status: "scanning",
+                message: "Scanning URL...",
+                threats: []
+            });
+
+
             const response = await axios.get(
                 `http://localhost:5000/API/URLscan?url=${encodeURIComponent(url)}`
             );
@@ -60,7 +69,15 @@ export default function URLScanner() {
             />
             <button className="ScanButton" onClick={handleScan}>Scan URL</button>
             <div className="URLScanResult">
-                <p>Risk: {scanResult?.risk}</p>
+
+                {scanResult?.risk === "Low" && (
+                    <p className="Risk-Low">Risk: {scanResult?.risk}</p>
+                )}
+                
+                {scanResult?.risk === "High" && (
+                    <p className="Risk-High">Risk: {scanResult?.risk}</p>
+                )}
+
                 <p>Status: {scanResult?.status}</p>
                 <p>Message: {scanResult?.message}</p>
                 
@@ -81,6 +98,10 @@ export default function URLScanner() {
 
                 {status === "Safe" && (
                     <SafeShield />
+                )}
+
+                {status === "Potentially Unwanted" && (
+                    <WarningShield />
                 )}
 
                 {status === "dangerous" && (

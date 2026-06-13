@@ -35,7 +35,6 @@ export async function ScanURL(req,res) {
       const matches = response.data.matches || [];
 
       if (matches.length === 0) {
-        console.log("API works")
         return res.json({
           success: true,
           url,

@@ -4,6 +4,7 @@ import jsQR from "jsqr";
 import axios from "axios";
 import SafeShield from "./SafeShield";
 import UnsafeShield from "./UnsafeShield";
+import WarningShield from "./WarningShield"
 
 export default function QRScanner() {
     const videoRef = useRef(null);
@@ -53,18 +54,23 @@ export default function QRScanner() {
                     try {
                         new URL(code.data);
                     } catch {
-
                     setQrCodeData({ 
                         risk: "unknown",
                         status: "unknown", 
-                        message: "Invalid URL", 
+                        message: "Invalid QR", 
                         threats: []
                     });
 
                         scanningRef.current = false;
-                        return;
                     }
                     try {
+                        setQrCodeData({ 
+                            risk: "unknown",
+                            status: "scanning", 
+                            message: "Scanning URL...", 
+                            threats: []
+                        });
+
                         const response = await axios.get(
                             `http://localhost:5000/API/URLscan?url=${encodeURIComponent(code.data)}`
                         );
@@ -108,7 +114,15 @@ export default function QRScanner() {
             <video ref={videoRef} className="QRScanner-Video" autoPlay playsInline></video>
             <canvas ref={canvasRef} style={{display: "none"}} className="QR Content "></canvas>
             <div className="QRScanner-Data">
-                <p>Risk:{qrCodeData?.risk}</p>
+
+                {qrCodeData?.risk === "Low" && (
+                    <p className="Risk-Low">Risk:{qrCodeData?.risk}</p>
+                )}
+                
+                {qrCodeData?.risk === "High" && (
+                    <p className="Risk-High">Risk:{qrCodeData?.risk}</p>
+                )}
+                
                 <p>Status:{qrCodeData?.status}</p>
                 <p>Message:{qrCodeData?.message}</p>
 
@@ -117,11 +131,11 @@ export default function QRScanner() {
                     <p> Threats: {qrCodeData.threats.length === 0 && "None"} </p>
                     {Array.isArray(qrCodeData.threats) && qrCodeData.threats.length > 0 && (
                     <ul>
-                        {qrCodeData.threats.map((threat, index) => (
-                            <li key={index}>
-                                <strong>{threat.threatType}</strong> | {threat.platformType} | {threat.threatEntryType} | {threat.matchedURL}
-                            </li>
-                        ))}
+                    {qrCodeData.threats.map((threat, index) => (
+                        <li key={index}>
+                            <strong>{threat.threatType}</strong> | {threat.platformType} | {threat.threatEntryType} | {threat.matchedURL}
+                        </li>
+                    ))}
                     </ul>
                     )}
                 </div>
@@ -134,11 +148,19 @@ export default function QRScanner() {
                     <SafeShield />
                     </>
                 )}
+
+                {status === "Potentially Unwanted" && (
+                    <>
+                    <WarningShield />
+                    </>
+                )}
+
                 {status === "dangerous" && (
                     <>
                     <UnsafeShield />
                     </>
                 )}
+                
             </div>
         </div>
     );

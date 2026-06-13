@@ -161,6 +161,14 @@ html, body {
   height: 300px;
 }
 
+.Risk-Low {
+  color: #22c55e;
+}
+
+.Risk-High {
+  color: #ef4444;
+}
+
 .link {
   font-size: clamp(14px, 3.5vw, 18px);
 }
@@ -316,6 +324,37 @@ html, body {
   stroke-dashoffset: 50;
   animation: drawDangCheck 0.4s ease forwards;
 }
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.WarningShield {
+  fill: none;
+  stroke: #f59e0b;
+  stroke-width: 4;
+  stroke-dasharray: 250;
+  stroke-dashoffset: 20;
+  display: block;
+  margin: 10px;
+  animation: pulse 2s infinite;
+}
+
+.History-Title {
+  color:red
+}
+
+
 
 @media (min-width: 768px) {
   .Header {
