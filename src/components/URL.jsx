@@ -21,7 +21,7 @@ export default function URLScanner() {
             setStatus(null);
             return;
         }
-
+ 
         try {
             setScanResult({
                 risk: "unknown",

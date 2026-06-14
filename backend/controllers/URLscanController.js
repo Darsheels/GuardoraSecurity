@@ -1,4 +1,5 @@
 import axios from "axios";
+import db from "..db.js"
 
 export async function ScanURL(req,res) {
     const { url } = req.query;
@@ -78,3 +79,33 @@ export async function ScanURL(req,res) {
       res.status(500).json({ result: 'Error scanning URL' });
     }
 };
+
+
+export function AddScanResultToDatabase(req, res) {
+  const { url, risk_level, status, message } = req.body;
+
+  if (!url || !risk_level || !status || !message) {
+    return res.status(400).json({ result: 'All fields are required' });
+  }
+
+  const query = `INSERT INTO scans (url, risk_level, status, message) VALUES (?, ?, ?, ?)`;
+  db.run(query, [url, risk_level, status, message], function(err) {
+    if (err) {
+      console.error('Error adding URL to database:', err);
+      return res.status(500).json({ result: 'Error adding URL to database' });
+    }
+    res.json({ result: 'URL added to database successfully', id: this.lastID });
+  });
+}
+
+
+export function GetScanResults(req, res) {
+  const query = `SELECT * FROM scans ORDER BY created_at DESC LIMIT 50`;
+  db.all(query, function(err, rows) {
+    if (err) {
+      console.error('Error fetching scan results:', err);
+      return res.status(500).json({ result: 'Error fetching scan results' });
+    }
+    res.json(rows);
+  });
+}
