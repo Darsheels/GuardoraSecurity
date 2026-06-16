@@ -32,7 +32,7 @@ export default function History() {
                             <p><strong>URL:</strong> {scan.url}</p>
                             <p><strong>Status:</strong> {scan.status}</p>
                             <p><strong>Risk:</strong> {scan.risk_level}</p>
-                            <p><strong>Date:</strong> {scan.timestamp}</p>
+                            <p><strong>Date:</strong> {scan.created_at}</p>
                         </div>
                        );
                     })

@@ -1,5 +1,5 @@
 import axios from "axios";
-import db from "..db.js"
+import db from "../db.js"
 
 export async function ScanURL(req,res) {
     const { url } = req.query;
@@ -36,6 +36,17 @@ export async function ScanURL(req,res) {
       const matches = response.data.matches || [];
 
       if (matches.length === 0) {
+        
+        db.run(
+          `INSERT INTO scans (url, risk_level, status, message) VALUES (?, ?, ?, ?)`,
+          [url, "Low", "Safe", "No threats detected"],
+          (err) => {
+          if (err) {
+            console.error('Error adding scan result to database:', err);
+          }
+        }
+        )
+
         return res.json({
           success: true,
           url,
@@ -48,6 +59,17 @@ export async function ScanURL(req,res) {
 
       if (matches.length === 1) {
         if (matches.some(m => m.threatType === "UNWANTED_SOFTWARE")) {
+
+          db.run(
+          `INSERT INTO scans (url, risk_level, status, message) VALUES (?, ?, ?, ?)`,
+          [url, "Medium", "Potentially Unwanted", "This URL is associated with unwanted software"],
+          (err) => {
+          if (err) {
+            console.error('Error adding scan result to database:', err);
+          }
+        }
+        );
+        
           return res.json({
             success: true,
             url,
@@ -59,6 +81,16 @@ export async function ScanURL(req,res) {
         }
       }
       
+      db.run(
+        `INSERT INTO scans (url, risk_level, status, message) VALUES (?, ?, ?, ?)`,
+        [url, "High", "Dangerous", "Threats detected for this URL"],
+        (err) => {
+          if (err) {
+            console.error('Error adding scan result to database:', err);
+          }
+        }
+        );
+
       return res.json({
         success: true,
         url,
@@ -79,25 +111,6 @@ export async function ScanURL(req,res) {
       res.status(500).json({ result: 'Error scanning URL' });
     }
 };
-
-
-export function AddScanResultToDatabase(req, res) {
-  const { url, risk_level, status, message } = req.body;
-
-  if (!url || !risk_level || !status || !message) {
-    return res.status(400).json({ result: 'All fields are required' });
-  }
-
-  const query = `INSERT INTO scans (url, risk_level, status, message) VALUES (?, ?, ?, ?)`;
-  db.run(query, [url, risk_level, status, message], function(err) {
-    if (err) {
-      console.error('Error adding URL to database:', err);
-      return res.status(500).json({ result: 'Error adding URL to database' });
-    }
-    res.json({ result: 'URL added to database successfully', id: this.lastID });
-  });
-}
-
 
 export function GetScanResults(req, res) {
   const query = `SELECT * FROM scans ORDER BY created_at DESC LIMIT 50`;
