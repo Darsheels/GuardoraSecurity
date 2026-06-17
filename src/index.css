@@ -25,7 +25,6 @@ html, body {
   padding-top: 8px;
   scroll-behavior: smooth;
   scrollbar-width: none;
-  animation: slideUp 1s ease forwards;
 }
 
 .Header {
@@ -86,6 +85,7 @@ html, body {
   background-color: transparent;
   color: white;
   margin-bottom: 10px;
+  margin: auto;
   padding: 8px 12px;
   text-align: center;
   white-space: nowrap;
@@ -302,12 +302,79 @@ html, body {
   min-height: 250px;
 }
 
+.FileScanner {
+  width: min(90vw, 800px);
+  min-height: 500px;
+  margin: clamp(200px, 8vw, 150px)  auto;
+  padding: 30px;
+  border-radius: 40px;
+  background-color: rgb(24, 24, 24);
+  gap: 25px ;
+  flex-direction: column;
+  display: flex;
+}
+
+.FileScanner-Title {
+  font: bold clamp(24px, 6vw, 30px) Arial, sans-serif;
+  background-color: transparent;
+  color: white;
+  margin: auto;
+}
+
+.FileScannerInput {
+  width: 100%;
+  max-width: 500px;
+  height: 45px;
+  font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: 1px solid rgb(92, 92, 92);
+  color: white;
+  background-color: black;
+  margin: auto;
+  cursor: pointer;
+}
+
+.FileScanButton {
+  width: 140px;
+  height: 45px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  margin:  auto;
+  top: 0px;
+}
+
+.FileScanResult {
+  font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
+  background-color: black;
+  color: rgb(186, 186, 186);
+  border: 1px solid rgb(92, 92, 92);
+  padding: 20px;
+  margin: auto;
+  background-color: black;
+
+  border-radius: 20px;
+  width: 60%;
+  min-height: 250px;
+}
+
+.FileScanButton:hover {
+  background-color: rgb(60, 60, 60);
+}
+
+.FileScanButton:active {
+  background-color: rgb(92, 92, 92);
+}
+
 .History {
   width: min(90vw, 800px);
   margin: clamp(200px, 8vw, 150px)  auto;
   padding: 30px;
   border-radius: 40px;
   background-color: rgb(24, 24, 24);
+  position: fixed;
   animation: slideUp 0.5s ease forwards;
 }
 
@@ -514,8 +581,9 @@ html, body {
   }
 
   .Header-Item {
-    font: 10px Arial, sans-serif;
-    padding: 20px 12px;
+    font: 7px Arial, sans-serif;
+    padding: 8px 8px;
+    margin: 0px 0;
   }
 
   .QRScanner {
@@ -569,6 +637,10 @@ html, body {
     font: bold 24px Arial, sans-serif;
 }
 
+.About {
+  margin: 40px auto;
+}
+
 
 .Footer {
   height: 80px;
@@ -619,5 +691,7 @@ html, body {
 .History-Item {
   margin: 10px 0;
 }
+
+
 
 }

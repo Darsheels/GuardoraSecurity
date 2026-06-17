@@ -10,6 +10,7 @@ export default function Header() {
     const nav_items = [
         { name: "QR Scan", link: "#QRScanner" },
         { name: "URL Scan", link: "#URLScanner" },
+        { name: "File Scan", link: "#FileScanner" }
     ];
 
     function toggleHistory() {

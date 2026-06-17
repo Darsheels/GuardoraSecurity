@@ -8,4 +8,14 @@ const db = new sqlite3.Database("guardora.db", (err) => {
     }
 });
 
+db.run(`
+    CREATE TABLE IF NOT EXISTS scans (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        url TEXT NOT NULL,
+        status TEXT NOT NULL,
+        risk_level TEXT NOT NULL,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+`);
+
 export default db;

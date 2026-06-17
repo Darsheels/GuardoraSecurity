@@ -3,6 +3,7 @@ import Header from "./components/Header"
 import QRScanner from "./components/QR"
 import URLScanner from "./components/URL"
 import Footer from "./components/Footer"
+import FileScanner from "./components/FileScanner"
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Hero></Hero>
       <QRScanner></QRScanner>
       <URLScanner></URLScanner>
+      <FileScanner></FileScanner>
       <Footer></Footer>
     </div>
   )
