@@ -1,9 +1,15 @@
 export default function Hero() {
     return (
         <div id="Hero" className="Hero">
-            <div className="Hero-About">
-                <h1 className="Hero-Header">About:</h1>
-                Guardora Security is a lightweight, threat-scanning platform designed to help individuals and small teams instantly detect phishing attempts, malicious URLs, and dangerous QR codes before they cause damage. Built for speed, clarity, and real‑world protection, Guardora gives users a simple way to verify suspicious links and stay safe online.
+            <div className="Hero-Content">
+                <h1 className="Hero-Header">Protect Yourself From Malicious QR Codes & URLs:</h1>
+                <p className="Hero-Item">Instantly detect phishing attempts</p>
+                <p className="Hero-Item">Scan for malicious URLs</p>
+                <p className="Hero-Item">Verify QR codes before scanning</p>
+                <p className="Hero-special">Powered by Google Safe Browsing</p>
+                <p className="Hero-special">Instant Threat Detection</p>
+                <p className="Hero-special">No Account Required</p>
+                <p className="Hero-special">Fully Free & Open Source</p>
             </div>
         </div>
     )

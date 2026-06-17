@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
+import api from "../api"
 
 export default function History() {
     const [history, setHistory] = useState([]);
@@ -10,8 +11,8 @@ export default function History() {
 
     const fetchHistory = async () => {
         try {
-            const response = await axios.get(
-                "http://localhost:5000/API/scans"
+            const response = await api.get(
+                "/API/scans"
             );
             
             setHistory(response.data);

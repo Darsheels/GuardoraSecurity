@@ -5,6 +5,7 @@ import axios from "axios";
 import SafeShield from "./SafeShield";
 import UnsafeShield from "./UnsafeShield";
 import WarningShield from "./WarningShield"
+import api from "../api"
 
 export default function QRScanner() {
     const videoRef = useRef(null);
@@ -71,8 +72,8 @@ export default function QRScanner() {
                             threats: []
                         });
 
-                        const response = await axios.get(
-                            `http://localhost:5000/API/URLscan?url=${encodeURIComponent(code.data)}`
+                        const response = await api.get(
+                            `/API/URLscan?url=${encodeURIComponent(code.data)}`
                         );
                         
                         const data = response.data;

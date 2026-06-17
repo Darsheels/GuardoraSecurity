@@ -4,6 +4,7 @@ import axios from "axios";
 import SafeShield from "./SafeShield";
 import UnsafeShield from "./UnsafeShield";
 import WarningShield from "./WarningShield";
+import api from "../api"
 
 export default function URLScanner() {
     const [url, setUrl] = useState("");
@@ -31,8 +32,8 @@ export default function URLScanner() {
             });
 
 
-            const response = await axios.get(
-                `http://localhost:5000/API/URLscan?url=${encodeURIComponent(url)}`
+            const response = await api.get(
+                `/API/URLscan?url=${encodeURIComponent(url)}`
             );
             
             const data = response.data;

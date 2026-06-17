@@ -1,16 +1,23 @@
 import { useState } from "react";
 import History from "./History";
+import About from "./About";
+import Hero from "./Hero"
 
 export default function Header() {
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+    const [isAboutOpen, setIsAboutOpen] = useState(false);
 
     const nav_items = [
         { name: "QR Scan", link: "#QRScanner" },
         { name: "URL Scan", link: "#URLScanner" },
     ];
 
-    function toggleSettings() {
-        setIsSettingsOpen(!isSettingsOpen);
+    function toggleHistory() {
+        setIsHistoryOpen(!isHistoryOpen);
+    }
+
+    function toggleAbout() {
+        setIsAboutOpen(!isAboutOpen);
     }
 
     return (
@@ -24,9 +31,11 @@ export default function Header() {
                         {item.name}
                     </a>
                 ))}
-                <button className="Header-Item" onClick={toggleSettings}>History</button>
+                <button className="Header-Item" onClick={toggleHistory}>History</button>
+                <button className="Header-Item" onClick={toggleAbout}>About</button>
             </div>
-            {isSettingsOpen && <History></History>}
+            {isHistoryOpen && <History></History>}
+            {isAboutOpen && <About></About>}
         </header>
     )
 }

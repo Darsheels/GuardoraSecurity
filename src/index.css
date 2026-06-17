@@ -1,25 +1,39 @@
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   background-color: rgb(0, 0, 0);
   user-select: none;
+
 }
 
 html, body {
   width: 100%;
   overflow-x: hidden;
-  padding-top: 60px;
+  padding-top: 8px;
   scroll-behavior: smooth;
   scrollbar-width: none;
+  animation: slideUp 1s ease forwards;
 }
 
 .Header {
-  height: 60px;
+  height: 70px;
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0px;
   padding: 0 15px;
   background-color: rgb(0, 0, 0);
   border-bottom: 1px solid rgb(92, 92, 92);
@@ -101,28 +115,78 @@ html, body {
   background-color: rgb(92, 92, 92);
 }
 
+
 .Hero {
-  padding: clamp(20px, 5vw, 50px);
-  background-color: rgb(24, 24, 24);
-  color: rgb(186, 186, 186);
-  width: 90vw;
-  max-width: 900px;
-  border-radius: clamp(20px, 10vw, 100px);
-  margin: clamp(30px, 8vw, 60px) auto;
+  width: 50%;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: slideUp 1.5s ease forwards;
+  padding: 20px 10px 100px;
+  margin:0 auto;
+  border-radius: 40px;
+  border: 1px solid rgb(92, 92, 92);
 }
 
-.Hero-About {
-  font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
+.Hero-Content {
+  text-align: center;
+  color: white;
   background-color: transparent;
-  line-height: 1.6;
 }
 
 .Hero-Header {
+  font: bold clamp(24px, 6vw, 30px) Arial, sans-serif;
+  background-color: transparent;
+  color: white;
+  align-items: top;
+}
+
+.Hero-Item {
+  font: clamp(14px, 3vw, 20px) Arial, sans-serif;
+  background-color: transparent;
+  color: white;
+  margin: 10px 0;
+  padding: 10px 0;
+  animation: slideUp 3.5s ease forwards;
+}
+
+.Hero-special {
+  animation: slideUp 4.5s ease forwards;
+  font: clamp(14px, 1vw, 20px) Arial, sans-serif;
+}
+
+
+
+.About {
+  width: min(90vw, 300px);
+  height: min(90vh, 300px);
+  margin: 250px,100px, 200px;
+  padding: 30px;
+  border-radius: 40px;
+  background-color: rgb(24, 24, 24);
+  position: absolute;
+  border: 1px solid rgb(92, 92, 92);
+  border-radius: 40px;
+  color: rgb(186, 186, 186);
+  top:85px;
+  right: 0px;
+}
+
+.About-Content {
+  font: clamp(14px, 2.5vw, 5px) Arial, sans-serif;
+  background-color: transparent;
+  line-height: 1.6;
+  animation: slideUp 0.5s ease forwards;
+}
+
+.About-Header {
   font: clamp(24px, 6vw, 30px) Arial, sans-serif;
   background-color: transparent;
-  margin: 0 0 15px 0;
+  margin: 0 0 6px 0;
   color: white;
 }
+
 
 .QRScanner {
   width: min(90vw, 800px);
@@ -244,6 +308,7 @@ html, body {
   padding: 30px;
   border-radius: 40px;
   background-color: rgb(24, 24, 24);
+  animation: slideUp 0.5s ease forwards;
 }
 
 
