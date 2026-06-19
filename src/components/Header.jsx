@@ -1,42 +1,48 @@
 import { useState } from "react";
 import History from "./History";
 import About from "./About";
-import Hero from "./Hero"
+import Hero from "./Hero";
 
 export default function Header() {
-    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-    const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
-    const nav_items = [
-        { name: "QR Scan", link: "#QRScanner" },
-        { name: "URL Scan", link: "#URLScanner" },
-        { name: "File Scan", link: "#FileScanner" }
-    ];
+  const nav_items = [
+    { name: "QR Scan", link: "#QRScanner" },
+    { name: "URL Scan", link: "#URLScanner" },
+    { name: "File Scan", link: "#FileScanner" },
+  ];
 
-    function toggleHistory() {
-        setIsHistoryOpen(!isHistoryOpen);
-    }
+  function toggleHistory() {
+    setIsHistoryOpen(!isHistoryOpen);
+  }
 
-    function toggleAbout() {
-        setIsAboutOpen(!isAboutOpen);
-    }
+  function toggleAbout() {
+    setIsAboutOpen(!isAboutOpen);
+  }
 
-    return (
-        <header className="Header">
-            <img className="Icon" src="./src/assets/GuardoraIcon.png"></img>
-            <a className="Title" href="#Hero">Guardora Security</a>
+  return (
+    <header className="Header">
+      <img className="Icon" src="./src/assets/GuardoraIcon.png"></img>
+      <a className="Title" href="#Hero">
+        Guardora Security
+      </a>
 
-            <div className="Header-Items">
-                {nav_items.map((item, index) => (
-                    <a key={index} href={item.link} className="Header-Item">
-                        {item.name}
-                    </a>
-                ))}
-                <button className="Header-Item" onClick={toggleHistory}>History</button>
-                <button className="Header-Item" onClick={toggleAbout}>About</button>
-            </div>
-            {isHistoryOpen && <History></History>}
-            {isAboutOpen && <About></About>}
-        </header>
-    )
+      <div className="Header-Items">
+        {nav_items.map((item, index) => (
+          <a key={index} href={item.link} className="Header-Item">
+            {item.name}
+          </a>
+        ))}
+        <button className="Header-Item" onClick={toggleHistory}>
+          History
+        </button>
+        <button className="Header-Item" onClick={toggleAbout}>
+          About
+        </button>
+      </div>
+      {isHistoryOpen && <History></History>}
+      {isAboutOpen && <About></About>}
+    </header>
+  );
 }

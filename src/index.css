@@ -356,8 +356,12 @@ html, body {
   background-color: black;
 
   border-radius: 20px;
-  width: 60%;
+  width: 90%;
   min-height: 250px;
+}
+
+.FileScanResult-Hash {
+  font: bold 15px Arial, sans-serif;
 }
 
 .FileScanButton:hover {
