@@ -1,420 +1,360 @@
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-* {
+@keyframes drawShield    { to { stroke-dashoffset: 0; } }
+@keyframes drawCheck     { to { stroke-dashoffset: 0; } }
+@keyframes drawDangShield{ to { stroke-dashoffset: 0; } }
+@keyframes drawDangCheck { to { stroke-dashoffset: 0; } }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: rgb(0, 0, 0);
   user-select: none;
-
 }
+
+* { background-color: transparent; }
 
 html, body {
   width: 100%;
   overflow-x: hidden;
-  padding-top: 8px;
   scroll-behavior: smooth;
   scrollbar-width: none;
+  background-color: #000;
 }
 
 .Header {
-  height: 70px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0px;
-  padding: 0 15px;
-  background-color: rgb(0, 0, 0);
-  border-bottom: 1px solid rgb(92, 92, 92);
-  flex-wrap: wrap;
   position: fixed;
   top: 0;
   z-index: 1000;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background-color: #000;
+  border-bottom: 1px solid rgb(92, 92, 92);
+}
+
+@media (min-width: 500px) {
+  .Header { height: 70px; padding: 0 15px; }
+}
+
+@media (min-width: 768px) {
+  .Header { height: 80px; gap: 12px; padding: 0 20px; }
 }
 
 .Title {
-  color: rgb(255, 255, 255);
-  margin: 0;
-  background-color: transparent;
-  font: bold clamp(18px, 5vw, 25px) Arial, sans-serif;
-  position: relative;
+  color: #fff;
+  font: bold clamp(12px, 3vw, 25px) Arial, sans-serif;
   white-space: nowrap;
   text-decoration: none;
+  flex-shrink: 0;
 }
 
-.Title:hover {
-  color: rgb(186, 186, 186);
-  cursor: pointer;
-}
+.Title:hover  { color: rgb(186, 186, 186); cursor: pointer; }
+.Title:active { color: rgb(92, 92, 92); }
 
-.Title:active {
-  color: rgb(92, 92, 92);
-}
-
-.Icon {
-  margin-top: -10;
-}
-
-.Icon:hover {
-  color: rgb(186, 186, 186);
-  cursor: pointer;
-
-}
+.Icon { flex-shrink: 0; }
+.Icon:hover { cursor: pointer; }
 
 .Header-Items {
   display: flex;
-  gap: 8px;
-  margin-left: auto;
-  background: transparent;
   flex-wrap: wrap;
-  
+  gap: 2px;
+  margin-left: auto;
 }
 
+@media (min-width: 500px) { .Header-Items { gap: 6px; } }
+@media (min-width: 768px) { .Header-Items { gap: 20px; } }
+
 .Header-Item {
-  font: bold clamp(14px, 3vw, 20px) Arial, sans-serif;
-  background-color: transparent;
-  color: white;
-  margin-bottom: 10px;
-  margin: auto;
-  padding: 8px 12px;
+  font: bold clamp(8px, 2vw, 20px) Arial, sans-serif;
+  color: #fff;
+  padding: 6px 8px;
   text-align: center;
   white-space: nowrap;
   text-decoration: none;
   border: none;
-}
-
-.Header_item::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -0.25rem;
-  width: 0;
-  height: 100px;
-  background: var(--accent);
-  transition: width 180ms ease;
-}
-
-.Header-Item:hover {
-  background-color: rgb(35, 35, 35);
-  color: rgb(186, 186, 186);
-  cursor: pointer;
   border-radius: 30px;
+  cursor: pointer;
 }
 
-.Header-Item:active {
-  background-color: rgb(92, 92, 92);
-}
+@media (min-width: 500px) { .Header-Item { padding: 8px 10px; } }
+@media (min-width: 768px) { .Header-Item { padding: 10px 16px; } }
 
+.Header-Item:hover  { background-color: rgb(35, 35, 35); color: rgb(186, 186, 186); }
+.Header-Item:active { background-color: rgb(92, 92, 92); }
 
 .Hero {
-  width: 50%;
-  height: 80vh;
+  width: min(90vw, 800px);
+  min-height: 70vh;
   display: flex;
   justify-content: center;
   align-items: center;
   animation: slideUp 1.5s ease forwards;
-  padding: 20px 10px 100px;
-  margin:0 auto;
-  border-radius: 40px;
+  padding: clamp(20px, 5vw, 50px);
+  margin: clamp(80px, 12vw, 120px) auto 40px;
+  border-radius: clamp(30px, 8vw, 100px);
   border: 1px solid rgb(92, 92, 92);
 }
 
 .Hero-Content {
   text-align: center;
-  color: white;
-  background-color: transparent;
 }
 
 .Hero-Header {
-  font: bold clamp(24px, 6vw, 30px) Arial, sans-serif;
-  background-color: transparent;
-  color: white;
-  align-items: top;
+  font: bold clamp(20px, 5vw, 30px) Arial, sans-serif;
+  color: #fff;
+  margin-bottom: 16px;
 }
 
 .Hero-Item {
-  font: clamp(14px, 3vw, 20px) Arial, sans-serif;
-  background-color: transparent;
-  color: white;
-  margin: 10px 0;
-  padding: 10px 0;
+  font: clamp(13px, 2.5vw, 20px) Arial, sans-serif;
+  color: #fff;
+  margin: 8px 0;
+  padding: 6px 0;
   animation: slideUp 3.5s ease forwards;
 }
 
 .Hero-special {
+  font: clamp(12px, 1.5vw, 16px) Arial, sans-serif;
+  color: rgb(186, 186, 186);
   animation: slideUp 4.5s ease forwards;
-  font: clamp(14px, 1vw, 20px) Arial, sans-serif;
+  margin: 4px 0;
 }
-
-
 
 .About {
-  width: min(90vw, 300px);
-  height: min(90vh, 300px);
-  margin: 250px,100px, 200px;
-  padding: 30px;
-  border-radius: 40px;
-  background-color: rgb(24, 24, 24);
   position: absolute;
+  top: 65px;
+  right: 0;
+  width: min(90vw, 300px);
+  max-height: min(90vh, 320px);
+  padding: 24px;
+  border-radius: 20px;
   border: 1px solid rgb(92, 92, 92);
-  border-radius: 40px;
+  background-color: rgb(24, 24, 24);
   color: rgb(186, 186, 186);
-  top:85px;
-  right: 0px;
+  overflow-y: auto;
+  z-index: 1500;
+  scrollbar-width: none;
 }
 
+@media (min-width: 500px)  { .About { top: 75px; } }
+@media (min-width: 768px)  { .About { top: 85px; border-radius: 40px; } }
+
 .About-Content {
-  font: clamp(14px, 2.5vw, 5px) Arial, sans-serif;
-  background-color: transparent;
+  font: clamp(12px, 2vw, 15px) Arial, sans-serif;
   line-height: 1.6;
   animation: slideUp 0.5s ease forwards;
 }
 
 .About-Header {
-  font: clamp(24px, 6vw, 30px) Arial, sans-serif;
-  background-color: transparent;
-  margin: 0 0 6px 0;
-  color: white;
+  font: bold clamp(20px, 4vw, 28px) Arial, sans-serif;
+  color: #fff;
+  margin-bottom: 10px;
 }
 
-
-.QRScanner {
-  width: min(90vw, 800px);
-  min-height: 500px;
-  margin: clamp(200px, 8vw, 150px)  auto;
-  border-radius: 10%;
-  overflow: hidden;
-  flex-direction: column;
-  background-color: rgb(24, 24, 24);
-  display: flex;
-  position: relative;
-}
-
-.QRScanner-Title {
-  font: bold clamp(24px, 6vw, 30px) Arial, sans-serif;
-  background-color: transparent;
-  margin: 30px 30px 0;
-  color: white;
-}
-
-.QRScanner video {
-  width: 37%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 80%;
-  margin: 30px 20px;
-}
-
-.QRScanner-Data {
-  font: clamp(20px, 3.5vw, 18px) Arial, sans-serif;
-  background-color: black;
-  color: rgb(186, 186, 186);
-  border: 1px solid rgb(92, 92, 92);
-  padding: 40px 50px;
-  margin: -320px 0px 0px 350px;
-  border-radius: 10%;
-  width: 400px;
-  height: 300px;
-}
-
-.Risk-Low {
-  color: #22c55e;
-}
-
-.Risk-High {
-  color: #ef4444;
-}
-
-.link {
-  font-size: clamp(14px, 3.5vw, 18px);
-}
-
-.URLScanner {
-  width: min(90vw, 800px);
-  min-height: 500px;
-  margin: clamp(200px, 8vw, 150px)  auto;
-  padding: 30px;
-  border-radius: 40px;
-  background-color: rgb(24, 24, 24);
-  gap: 25px ;
-  flex-direction: column;
-  display: flex;
-}
-
-.URLScanner-Title {
-  font: bold clamp(24px, 6vw, 30px) Arial, sans-serif;
-  background-color: transparent;
-  color: white;
-  margin: auto;
-}
-
-.URLInput {
-  width: 100%;
-  max-width: 500px;
-  height: 45px;
-  font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
-  padding: 10px 15px;
-  border-radius: 12px;
-  border: 1px solid rgb(92, 92, 92);
-  color: white;
-  background-color: black;
-  margin: auto;
-}
-
-.ScanButton {
-  width: 140px;
-  height: 45px;
-  border: none;
-  border-radius: 12px;
-  color: white;
-  cursor: pointer;
-  margin: auto;
-}
-
-.ScanButton:hover {
-  background-color: rgb(60, 60, 60);
-}
-
-.ScanButton:active {
-  background-color: rgb(92, 92, 92);
-}
-
-.URLScanResult {
-  font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
-  background-color: black;
-  color: rgb(186, 186, 186);
-  border: 1px solid rgb(92, 92, 92);
-  padding: 20px;
-  margin: auto;
-
-  border-radius: 20px;
-  width: 60%;
-  min-height: 250px;
-}
-
+.QRScanner,
+.URLScanner,
 .FileScanner {
   width: min(90vw, 800px);
   min-height: 500px;
-  margin: clamp(200px, 8vw, 150px)  auto;
-  padding: 30px;
-  border-radius: 40px;
+  margin: clamp(80px, 14vw, 160px) auto;
+  padding: clamp(16px, 4vw, 30px);
+  border-radius: clamp(16px, 5vw, 40px);
   background-color: rgb(24, 24, 24);
-  gap: 25px ;
-  flex-direction: column;
   display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
+.QRScanner-Title,
+.URLScanner-Title,
 .FileScanner-Title {
-  font: bold clamp(24px, 6vw, 30px) Arial, sans-serif;
-  background-color: transparent;
-  color: white;
-  margin: auto;
+  font: bold clamp(20px, 5vw, 30px) Arial, sans-serif;
+  color: #fff;
+  text-align: center;
 }
 
+.QRScanner video {
+  width: clamp(40%, 50%, 60%);
+  max-width: 240px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.QRScanner-Data,
+.URLScanResult,
+.FileScanResult {
+  font: clamp(13px, 3vw, 18px) Arial, sans-serif;
+  background-color: #000;
+  color: rgb(186, 186, 186);
+  border: 1px solid rgb(92, 92, 92);
+  padding: clamp(12px, 3vw, 20px);
+  border-radius: 20px;
+  min-height: 200px;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .QRScanner-Data,
+  .URLScanResult { width: 80%; margin: 0 auto; }
+}
+
+@media (min-width: 768px) {
+  .QRScanner-Data,
+  .URLScanResult { width: 60%; }
+}
+
+.URLInput,
 .FileScannerInput {
   width: 100%;
   max-width: 500px;
   height: 45px;
-  font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
+  font: clamp(13px, 3vw, 18px) Arial, sans-serif;
   padding: 10px 15px;
   border-radius: 12px;
   border: 1px solid rgb(92, 92, 92);
-  color: white;
-  background-color: black;
-  margin: auto;
-  cursor: pointer;
+  color: #fff;
+  background-color: #000;
+  margin: 0 auto;
+  display: block;
 }
 
+.FileScannerInput { cursor: pointer; }
+
+.ScanButton,
 .FileScanButton {
   width: 140px;
   height: 45px;
   border: none;
   border-radius: 12px;
-  color: white;
+  color: #fff;
+  background-color: rgb(40, 40, 40);
   cursor: pointer;
-  margin:  auto;
-  top: 0px;
+  margin: 0 auto;
+  display: block;
+  font: clamp(13px, 2.5vw, 16px) Arial, sans-serif;
 }
 
-.FileScanResult {
-  font: clamp(14px, 3.5vw, 18px) Arial, sans-serif;
-  background-color: black;
-  color: rgb(186, 186, 186);
-  border: 1px solid rgb(92, 92, 92);
-  padding: 20px;
-  margin: auto;
-  background-color: black;
+.ScanButton:hover,
+.FileScanButton:hover  { background-color: rgb(60, 60, 60); }
 
-  border-radius: 20px;
-  width: 90%;
-  min-height: 250px;
+.ScanButton:active,
+.FileScanButton:active { background-color: rgb(92, 92, 92); }
+
+.Risk-Low     { color: #22c55e; }
+.Risk-High    { color: #ef4444; }
+.Risk-Pending { color: #f59e0b; }
+
+.link {
+  font: clamp(11px, 2.5vw, 16px) Arial, sans-serif;
+  color: #60a5fa;
+  word-break: break-all;
 }
 
 .FileScanResult-Hash {
-  font: bold 15px Arial, sans-serif;
-}
-
-.FileScanButton:hover {
-  background-color: rgb(60, 60, 60);
-}
-
-.FileScanButton:active {
-  background-color: rgb(92, 92, 92);
+  font: bold clamp(9px, 1.5vw, 15px) Arial, sans-serif;
+  word-break: break-all;
 }
 
 .History {
-  width: min(90vw, 800px);
-  margin: clamp(200px, 8vw, 150px)  auto;
-  padding: 30px;
-  border-radius: 40px;
-  background-color: rgb(24, 24, 24);
   position: fixed;
+  top: 0;
+  right: 0;
+  width: clamp(240px, 80vw, 350px);
+  height: 100vh;
+  z-index: 2000;
+  background-color: rgb(18, 18, 18);
+  border-left: 1px solid rgb(92, 92, 92);
   animation: slideUp 0.5s ease forwards;
+  overflow: hidden;
 }
 
+.History-Header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.History-Close {
+  background: none;
+  border: 1px solid rgb(92, 92, 92);
+  color: rgb(186, 186, 186);
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.History-Close:hover {
+  background-color: rgb(50, 50, 50);
+  color: #fff;
+}
+
+.History-Close:active {
+  background-color: rgb(92, 92, 92);
+}
+
+.History-Content {
+  height: 100%;
+  color: #fff;
+  padding: 80px 16px 20px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.History-Content::-webkit-scrollbar { display: none; }
+
+.History-Title {
+  color: #fff;
+  font: bold 22px Arial, sans-serif;
+  margin-bottom: 16px;
+}
+
+.History-Item {
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgb(50, 50, 50);
+  font-size: 13px;
+  color: rgb(186, 186, 186);
+  line-height: 1.6;
+}
 
 .Footer {
-  height: 80px;
   width: 100%;
+  height: 70px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 30px 540px;
-  background-color: rgb(0, 0, 0);
+  justify-content: center;
+  padding: 0 20px;
+  background-color: #000;
   border-top: 1px solid rgb(92, 92, 92);
-  flex-wrap: wrap;
-  z-index: 1000;
-  color: white;
+  color: #fff;
+  font: clamp(12px, 2vw, 16px) Arial, sans-serif;
 }
 
-
-
-@keyframes drawShield {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes drawCheck {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.SafeShield {
-  background:transparent;
-}
+.SafeShield,
+.UnsafeShield { display: block; margin: 10px auto; }
 
 .Shield {
   fill: none;
@@ -433,24 +373,7 @@ html, body {
   stroke-linejoin: round;
   stroke-dasharray: 50;
   stroke-dashoffset: 50;
-  animation: drawCheck 0.4s ease forwards;
-  animation-delay: 0.8s;
-}
-
-@keyframes drawDangShield {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes drawDangCheck {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.UnsafeShield {
-  background:transparent;
+  animation: drawCheck 0.4s ease forwards 0.8s;
 }
 
 .DangShield {
@@ -462,7 +385,8 @@ html, body {
   animation: drawDangShield 0.8s ease forwards;
 }
 
-.Cross1, .Cross2 {
+.Cross1,
+.Cross2 {
   fill: none;
   stroke: #ef4444;
   stroke-width: 5;
@@ -472,230 +396,15 @@ html, body {
   animation: drawDangCheck 0.4s ease forwards;
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.08);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
 .WarningShield {
+  display: block;
+  margin: 10px auto;
   fill: none;
   stroke: #f59e0b;
-  stroke-width: 4;
-  stroke-dasharray: 250;
-  stroke-dashoffset: 20;
-  display: block;
-  margin: 10px;
+  stroke-width: 2;
   animation: pulse 2s infinite;
 }
 
-.History {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 350px;
-  height: 100vh;
-  z-index: 2000;
-  border: 1px solid rgb(92, 92, 92);
-}
-
-.History-Content {
-  border-radius: 40px;
-  height: 60%;
-  color: white;
-  padding: 10px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  
-}
-
-.History-Content::-webkit-scrollbar {
-  display: none;
-}
-
-.History-Title {
-  color: white;
-  background-color: transparent;
-  font: bold 24px Arial, sans-serif;
-  padding: 20px 1px;
-}
-
-.History-Item {
-  margin: 10px 0;
-}
-
-
-@media (min-width: 768px) {
-  .Header {
-    height: 80px;
-    gap: 12px;
-    padding: 0 20px;
-  }
-
-  .Title {
-    font: bold 25px Arial, sans-serif;
-  }
-
-  .Header-Items {
-    gap: 20px;
-  }
-
-  .Header-Item {
-    font: 20px Arial, sans-serif;
-    padding: 10px 16px;
-  }
-
-  .Hero {
-    padding: 50px;
-    width: 800px;
-    border-radius: 100px;
-    margin: 60px auto;
-  }
-
-  .Hero-About {
-    font: 18px Arial, sans-serif;
-  }
-
-  .Hero-Header {
-    font: bold 30px Arial, sans-serif;
-  }
-}
-
-@media (max-width: 500px) {
-  .Header {
-    height: 60px;
-    gap: 8px;
-    padding: 0 10px;
-  }
-
-  .Title {
-    font: bold 10px Arial, sans-serif;
-  }
-
-  .Header-Items {
-    gap: 5px;
-  }
-
-  .Header-Item {
-    font: 7px Arial, sans-serif;
-    padding: 8px 8px;
-    margin: 0px 0;
-  }
-
-  .QRScanner {
-  width: min(90vw, 800px);
-  min-height: 500px;
-  margin: clamp(200px, 8vw, 150px)  auto;
-  border-radius: 10%;
-  overflow: hidden;
-  flex-direction: column;
-  background-color: rgb(24, 24, 24);
-  display: flex;
-  position: relative;
-}
-
-.QRScanner video {
-  width: 37%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 80%;
-  margin: 30px 20px;
-}
-
-.QRScanner-Data {
-  font: clamp(2px, 3.5vw, 18px) Arial, sans-serif;
-  background-color: black;
-  color: rgb(186, 186, 186);
-  border: 1px solid rgb(92, 92, 92);
-  padding: 40px 40px;
-  margin: -200px 0px 0px 165px;
-  border-radius: 10%;
-  width: 200px;
-  height: 300px;
-}
-
-.link {
-  font-size: clamp(14px, 3.5vw, 18px);
-}
-
-.Hero {
-    padding: 30px;
-    width: 90%;
-    border-radius: 50px;
-    margin: 40px auto;
-}
-
-.Hero-About {
-    font: 14px Arial, sans-serif;
-}
-
-.Hero-Header {
-    font: bold 24px Arial, sans-serif;
-}
-
-.About {
-  margin: 40px auto;
-}
-
-
-.Footer {
-  height: 80px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 30px 50px;
-  background-color: rgb(0, 0, 0);
-  border-top: 2px solid rgb(92, 92, 92);
-  flex-wrap: wrap;
-  z-index: 1000;
-  color: white;
-}
-
-.History {
-  position: absolute;
-  right: 0;
-  width: 350px;
-  height: 70vh;
-  z-index: 2000;
-  border: 1px solid rgb(92, 92, 92);
-  margin: 450px 0px;
-}
-
-.History-Content {
-  border-radius: 40px;
-  height: 60%;
-  color: white;
-  padding: 10px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  
-}
-
-.History-Content::-webkit-scrollbar {
-  display: none;
-}
-
-.History-Title {
-  color: white;
-  background-color: transparent;
-  font: bold 24px Arial, sans-serif;
-  padding: 20px 1px;
-}
-
-.History-Item {
-  margin: 10px 0;
-}
-
-
-
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; }
 }

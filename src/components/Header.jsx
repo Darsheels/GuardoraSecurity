@@ -41,8 +41,9 @@ export default function Header() {
           About
         </button>
       </div>
-      {isHistoryOpen && <History></History>}
-      {isAboutOpen && <About></About>}
+
+      {isHistoryOpen && <History onClose={() => setIsHistoryOpen(false)} />}
+      {isAboutOpen && <About />}
     </header>
   );
 }
