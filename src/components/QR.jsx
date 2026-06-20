@@ -26,6 +26,11 @@ export default function QRScanner() {
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
+
+          await new Promise((resolve) => {
+            videoRef.current.onloadedmetadata = () => resolve();
+          });
+
           await videoRef.current.play();
           scanQRCode();
         }
@@ -70,7 +75,9 @@ export default function QRScanner() {
             });
 
             scanningRef.current = false;
+            return;
           }
+
           try {
             setQrCodeData({
               risk: "unknown",

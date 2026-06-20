@@ -1,5 +1,5 @@
 import axios from "axios";
-import db from "../db.js";
+import db from "../dbpg.js";
 
 export async function ScanURL(req, res) {
   const { url } = req.query;
@@ -34,8 +34,8 @@ export async function ScanURL(req, res) {
     const matches = response.data.matches || [];
 
     if (matches.length === 0) {
-      db.run(
-        `INSERT INTO scans (url, risk_level, status, message) VALUES (?, ?, ?, ?)`,
+      await db.query(
+        `INSERT INTO scans (url, risk_level, status, message) VALUES ($1, $2, $3, $4)`,
         [url, "Low", "Safe", "No threats detected"],
         (err) => {
           if (err) {
@@ -56,8 +56,8 @@ export async function ScanURL(req, res) {
 
     if (matches.length === 1) {
       if (matches.some((m) => m.threatType === "UNWANTED_SOFTWARE")) {
-        db.run(
-          `INSERT INTO scans (url, risk_level, status, message) VALUES (?, ?, ?, ?)`,
+        await db.query(
+          `INSERT INTO scans (url, risk_level, status, message) VALUES ($1, $2, $3, $4)`,
           [
             url,
             "Medium",
@@ -82,8 +82,8 @@ export async function ScanURL(req, res) {
       }
     }
 
-    db.run(
-      `INSERT INTO scans (url, risk_level, status, message) VALUES (?, ?, ?, ?)`,
+    await db.query(
+      `INSERT INTO scans (url, risk_level, status, message) VALUES ($1, $2, $3, $4)`,
       [url, "High", "Dangerous", "Threats detected for this URL"],
       (err) => {
         if (err) {
@@ -112,13 +112,12 @@ export async function ScanURL(req, res) {
   }
 }
 
-export function GetScanResults(req, res) {
-  const query = `SELECT * FROM scans ORDER BY created_at DESC LIMIT 50`;
-  db.all(query, function (err, rows) {
-    if (err) {
-      console.error("Error fetching scan results:", err);
-      return res.status(500).json({ result: "Error fetching scan results" });
-    }
+export async function GetScanResults(req, res) {
+  try {
+    const rows = await db.all(`SELECT * FROM scans ORDER BY created_at DESC LIMIT 50`);
     res.json(rows);
-  });
+  } catch (err) {
+    console.error("Error fetching scan results:", err);
+    res.status(500).json({ result: "Error fetching scan results" });
+  }
 }

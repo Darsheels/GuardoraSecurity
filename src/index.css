@@ -280,6 +280,7 @@ html, body {
   border-left: 1px solid rgb(92, 92, 92);
   animation: slideUp 0.5s ease forwards;
   overflow: hidden;
+  border-radius: 50px 50px 50px 50px;
 }
 
 .History-Header {
@@ -320,6 +321,7 @@ html, body {
   padding: 80px 16px 20px;
   overflow-y: auto;
   scrollbar-width: none;
+  background-color: rgb(18, 18, 18);
 }
 
 .History-Content::-webkit-scrollbar { display: none; }
