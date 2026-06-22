@@ -17,7 +17,8 @@ async function checkVirusTotal(hash) {
 
     const stats = response.data.data.attributes.last_analysis_stats;
 
-    const total = stats.malicious + stats.suspicious + stats.harmless + stats.undetected;
+    const total =
+      stats.malicious + stats.suspicious + stats.harmless + stats.undetected;
 
     return {
       detections: `${stats.malicious}/${total}`,
@@ -69,7 +70,11 @@ export async function FileScan(req, res) {
         fileSize: req.file.size,
         fileType: req.file.mimetype,
         status:
-          risk === "Critical"? "Dangerous": risk === "High"? "Potentially Unwanted": "Safe",
+          risk === "Critical"
+            ? "Dangerous"
+            : risk === "High"
+              ? "Potentially Unwanted"
+              : "Safe",
         risk,
         detections: virusTotalResult.detections,
         message: virusTotalResult.found
@@ -97,6 +102,10 @@ export async function FileScan(req, res) {
       status: "processing",
       message: "File uploaded to VirusTotal, analysis pending",
       id: uploadRes.data.data.id,
+      filename: req.file.originalname,
+      fileSize: req.file.size,
+      fileType: req.file.mimetype,
+      hash: hash,
     });
   } catch (err) {
     console.error(err);
@@ -104,7 +113,6 @@ export async function FileScan(req, res) {
     if (err.response?.status === 409) {
       const retry = await checkVirusTotal(hash);
     }
-    throw err;
 
     res.status(500).json({
       status: "error",
@@ -147,7 +155,11 @@ export async function GetAnalysisResult(req, res) {
       });
     }
 
-    const total = attributes.stats.malicious + attributes.stats.suspicious + attributes.stats.harmless + attributes.stats.undetected;
+    const total =
+      attributes.stats.malicious +
+      attributes.stats.suspicious +
+      attributes.stats.harmless +
+      attributes.stats.undetected;
     const stats = attributes.stats;
     let risk = "Low";
 
@@ -166,7 +178,8 @@ export async function GetAnalysisResult(req, res) {
             : "Safe",
       risk,
       message: "File scanned successfully",
-
+      detections: virusTotalResult.detections,
+      
       stats: {
         detections: `${stats.malicious}/${total}`,
         malicious: stats.malicious,

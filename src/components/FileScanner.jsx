@@ -118,13 +118,13 @@ export default function FileScanner() {
       if (data?.status === "processing") {
         setResult({
           status: "processing",
-          risk: "unknown",
+          risk: data?.risk || "Unknown",
           message: "Processing file...",
-          hash: "Unknown",
-          fileSize: "Unknown",
-          fileType: "Unknown",
-          detections: "Unknown",
-          filename: "Unknown",
+          hash: data?.hash || "Unknown",
+          fileSize: data?.fileSize || "Unknown",
+          fileType: data?.fileType || "Unknown",
+          detections: data?.detections || "Unknown",
+          filename: data?.filename || "Unknown",
         });
         setStatus("processing");
 
@@ -135,6 +135,7 @@ export default function FileScanner() {
               fileSize: data?.fileSize,
               fileType: data?.fileType,
               filename: data?.filename,
+              detections: data?.detections,
             }),
           poll_interval_ms,
         );

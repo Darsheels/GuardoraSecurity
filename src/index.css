@@ -186,7 +186,7 @@ html, body {
 }
 
 .QRScanner video {
-  width: clamp(40%, 50%, 60%);
+  width: clamp(30%, 10%, 10%);
   max-width: 240px;
   height: 180px;
   object-fit: cover;
@@ -271,10 +271,10 @@ html, body {
 
 .History {
   position: fixed;
-  top: 0;
+  top: 15vh;
   right: 0;
   width: clamp(240px, 80vw, 350px);
-  height: 100vh;
+  height: 80vh;
   z-index: 2000;
   background-color: rgb(18, 18, 18);
   border-left: 1px solid rgb(92, 92, 92);
@@ -285,9 +285,17 @@ html, body {
 
 .History-Header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: top;
+  /* justify-content: space-between; */
   margin-bottom: 16px;
+  border-bottom: 1px solid rgb(92, 92, 92);
+}
+
+.History-Title {
+  color: #fff;
+  font: bold 22px Arial, sans-serif;
+  margin-right: 20vh;
+  
 }
 
 .History-Close {
@@ -304,6 +312,7 @@ html, body {
   justify-content: center;
   flex-shrink: 0;
   transition: background-color 0.15s ease, color 0.15s ease;
+  margin-right: 1vh;
 }
 
 .History-Close:hover {
@@ -312,6 +321,31 @@ html, body {
 }
 
 .History-Close:active {
+  background-color: rgb(92, 92, 92);
+}
+
+.History-Clear {
+  background: none;
+  border: 1px solid rgb(92, 92, 92);
+  color: rgb(186, 186, 186);
+  font-size: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.History-Clear:hover {
+  background-color: rgb(50, 50, 50);
+  color: #fff;
+}
+
+.History-Clear:active {
   background-color: rgb(92, 92, 92);
 }
 
