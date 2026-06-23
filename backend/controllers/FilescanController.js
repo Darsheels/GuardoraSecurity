@@ -3,6 +3,7 @@ import crypto from "crypto";
 import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
+import os from "os";
 
 async function checkVirusTotal(hash) {
   try {
@@ -36,7 +37,7 @@ async function checkVirusTotal(hash) {
   }
 }
 
-const upload = multer({ dest: "./uploads/" });
+const upload = multer({ dest: os.tmpdir(), limits: { fileSize: 32 * 1024 * 1024 } }); //"./uploads/"
 export const uploadFile = upload.single("file");
 
 export async function FileScan(req, res) {
@@ -46,8 +47,9 @@ export async function FileScan(req, res) {
     }
 
     const fileBuffer = fs.readFileSync(req.file.path);
+    let hash;
 
-    const hash = crypto.createHash("sha256").update(fileBuffer).digest("hex");
+    hash = crypto.createHash("sha256").update(fileBuffer).digest("hex");
 
     const virusTotalResult = await checkVirusTotal(hash);
 
@@ -108,9 +110,7 @@ export async function FileScan(req, res) {
       hash: hash,
     });
   } catch (err) {
-    console.error(err);
-
-    if (err.response?.status === 409) {
+    if (err.response?.status === 409 && hash) {
       const retry = await checkVirusTotal(hash);
     }
 
@@ -178,7 +178,7 @@ export async function GetAnalysisResult(req, res) {
             : "Safe",
       risk,
       message: "File scanned successfully",
-      detections: virusTotalResult.detections,
+      detections: `${stats.malicious}/${total}`,
       
       stats: {
         detections: `${stats.malicious}/${total}`,

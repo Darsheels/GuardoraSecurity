@@ -103,7 +103,7 @@ export default function URLScanner() {
 
         {status === "Potentially Unwanted" && <WarningShield />}
 
-        {status === "dangerous" && <UnsafeShield />}
+        {status === "Dangerous" && <UnsafeShield />}
       </div>
     </div>
   );

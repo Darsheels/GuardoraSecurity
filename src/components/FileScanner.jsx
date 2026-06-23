@@ -187,7 +187,7 @@ export default function FileScanner() {
           <p className="Risk-Low">Risk: {result?.risk}</p>
         )}
 
-        {result?.risk === "High | Critical" && (
+        {result?.risk === "High" || result?.risk === "Critical" && (
           <p className="Risk-High">Risk: {result?.risk}</p>
         )}
 

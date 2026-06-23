@@ -14,10 +14,12 @@ export default function Header() {
   ];
 
   function toggleHistory() {
+    setIsAboutOpen(false);
     setIsHistoryOpen(!isHistoryOpen);
   }
 
   function toggleAbout() {
+    setIsHistoryOpen(false);
     setIsAboutOpen(!isAboutOpen);
   }
 
@@ -43,7 +45,7 @@ export default function Header() {
       </div>
 
       {isHistoryOpen && <History onClose={() => setIsHistoryOpen(false)} />}
-      {isAboutOpen && <About />}
+      {isAboutOpen && <About onClose={() => setIsAboutOpen(false)} />}
     </header>
   );
 }

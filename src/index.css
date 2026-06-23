@@ -158,9 +158,43 @@ html, body {
 }
 
 .About-Header {
+  display: flex;
+  align-items: top;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgb(92, 92, 92);
+}
+
+.About-Title {
   font: bold clamp(20px, 4vw, 28px) Arial, sans-serif;
   color: #fff;
   margin-bottom: 10px;
+}
+
+.About-Close {
+  background: none;
+  border: 1px solid rgb(92, 92, 92);
+  color: rgb(186, 186, 186);
+  font-size: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  margin-right: 1vh;
+}
+
+.About-Close:hover {
+  background-color: rgb(50, 50, 50);
+  color: #fff;
+}
+
+.About-Close:active {
+  background-color: rgb(92, 92, 92);
 }
 
 .QRScanner,
@@ -186,7 +220,7 @@ html, body {
 }
 
 .QRScanner video {
-  width: clamp(30%, 10%, 10%);
+  width: clamp(200px, 50%, 400px);
   max-width: 240px;
   height: 180px;
   object-fit: cover;
@@ -289,11 +323,12 @@ html, body {
   /* justify-content: space-between; */
   margin-bottom: 16px;
   border-bottom: 1px solid rgb(92, 92, 92);
+  margin-top: -8vh;
 }
 
 .History-Title {
   color: #fff;
-  font: bold 22px Arial, sans-serif;
+  font: bold clamp(20px, 4vw, 28px) Arial, sans-serif;
   margin-right: 20vh;
   
 }
