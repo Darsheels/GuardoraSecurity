@@ -37,7 +37,10 @@ async function checkVirusTotal(hash) {
   }
 }
 
-const upload = multer({ dest: os.tmpdir(), limits: { fileSize: 32 * 1024 * 1024 } }); //"./uploads/"
+const upload = multer({
+  dest: os.tmpdir(),
+  limits: { fileSize: 32 * 1024 * 1024 },
+}); //"./uploads/"
 export const uploadFile = upload.single("file");
 
 export async function FileScan(req, res) {
@@ -110,18 +113,67 @@ export async function FileScan(req, res) {
       hash: hash,
     });
   } catch (err) {
-    if (err.response?.status === 409 && hash) {
-      const retry = await checkVirusTotal(hash);
+    if (req.file?.path) {
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch (_) {}
     }
 
-    res.status(500).json({
+    if (err.response?.status === 409 && hash) {
+      try {
+        const retry = await checkVirusTotal(hash);
+
+        if (!retry.found) {
+          return res.status(503).json({
+            status: "error",
+            risk: "Unknown",
+            message:
+              "File already queued for analysis — please try again shortly",
+          });
+        }
+
+        let risk = "Low";
+        if (retry.malicious > 0) risk = "Critical";
+        else if (retry.suspicious > 0) risk = "High";
+
+        return res.json({
+          filename: req.file?.originalname ?? null,
+          hash,
+          fileSize: req.file?.size ?? null,
+          fileType: req.file?.mimetype ?? null,
+          status:
+            risk === "Critical"
+              ? "Dangerous"
+              : risk === "High"
+                ? "Potentially Unwanted"
+                : "Safe",
+          risk,
+          detections: retry.detections,
+          message: "File scanned successfully",
+        });
+      } catch (retryErr) {
+        console.error("Error on 409 retry:", retryErr.message);
+        return res.status(500).json({
+          status: "error",
+          risk: "Unknown",
+          message: "Failed to retrieve existing analysis",
+          hash,
+          filename: req.file?.originalname ?? null,
+          fileSize: req.file?.size ?? null,
+          fileType: req.file?.mimetype ?? null,
+        });
+      }
+    }
+
+    console.error("FileScan error:", err.response?.data ?? err.message);
+    return res.status(500).json({
       status: "error",
       risk: "Unknown",
-      message: null,
-      hash: null,
-      filename: null,
-      fileSize: null,
-      fileType: null,
+      message: "Error scanning file",
+      hash: hash ?? null,
+      filename: req.file?.originalname ?? null,
+      fileSize: req.file?.size ?? null,
+      fileType: req.file?.mimetype ?? null,
     });
   }
 }
@@ -179,7 +231,7 @@ export async function GetAnalysisResult(req, res) {
       risk,
       message: "File scanned successfully",
       detections: `${stats.malicious}/${total}`,
-      
+
       stats: {
         detections: `${stats.malicious}/${total}`,
         malicious: stats.malicious,
