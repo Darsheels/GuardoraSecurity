@@ -40,7 +40,7 @@ async function checkVirusTotal(hash) {
 const upload = multer({
   dest: os.tmpdir(),
   limits: { fileSize: 32 * 1024 * 1024 },
-}); //"./uploads/"
+}); 
 export const uploadFile = upload.single("file");
 
 export async function FileScan(req, res) {
