@@ -2,6 +2,7 @@ import { useState } from "react";
 import History from "./History";
 import About from "./About";
 import Hero from "./Hero";
+import logo from "../assets/GuardoraIcon.png"
 
 export default function Header() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -25,7 +26,7 @@ export default function Header() {
 
   return (
     <header className="Header">
-      <img className="Icon" src="./src/assets/GuardoraIcon.png"></img>
+      <img className="Icon" src={logo}></img>
       <a className="Title" href="#Hero">
         Guardora Security
       </a>

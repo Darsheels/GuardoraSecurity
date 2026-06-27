@@ -1,28 +1,60 @@
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes drawShield    { to { stroke-dashoffset: 0; } }
-@keyframes drawCheck     { to { stroke-dashoffset: 0; } }
-@keyframes drawDangShield{ to { stroke-dashoffset: 0; } }
-@keyframes drawDangCheck { to { stroke-dashoffset: 0; } }
+@keyframes drawShield {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes drawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes drawDangShield {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes drawDangCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.08); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   user-select: none;
 }
 
-* { background-color: transparent; }
+* {
+  background-color: transparent;
+}
 
-html, body {
+html,
+body {
   width: 100%;
   overflow-x: hidden;
   scroll-behavior: smooth;
@@ -45,26 +77,44 @@ html, body {
 }
 
 @media (min-width: 500px) {
-  .Header { height: 70px; padding: 0 15px; }
+  .Header {
+    height: 70px;
+    padding: 0 15px;
+  }
 }
 
 @media (min-width: 768px) {
-  .Header { height: 80px; gap: 12px; padding: 0 20px; }
+  .Header {
+    height: 80px;
+    gap: 12px;
+    padding: 0 20px;
+  }
 }
 
 .Title {
   color: #fff;
-  font: bold clamp(12px, 3vw, 25px) Arial, sans-serif;
+  font:
+    bold clamp(12px, 3vw, 25px) Arial,
+    sans-serif;
   white-space: nowrap;
   text-decoration: none;
   flex-shrink: 0;
 }
 
-.Title:hover  { color: rgb(186, 186, 186); cursor: pointer; }
-.Title:active { color: rgb(92, 92, 92); }
+.Title:hover {
+  color: rgb(186, 186, 186);
+  cursor: pointer;
+}
+.Title:active {
+  color: rgb(92, 92, 92);
+}
 
-.Icon { flex-shrink: 0; }
-.Icon:hover { cursor: pointer; }
+.Icon {
+  flex-shrink: 0;
+}
+.Icon:hover {
+  cursor: pointer;
+}
 
 .Header-Items {
   display: flex;
@@ -73,11 +123,21 @@ html, body {
   margin-left: auto;
 }
 
-@media (min-width: 500px) { .Header-Items { gap: 6px; } }
-@media (min-width: 768px) { .Header-Items { gap: 20px; } }
+@media (min-width: 500px) {
+  .Header-Items {
+    gap: 6px;
+  }
+}
+@media (min-width: 768px) {
+  .Header-Items {
+    gap: 20px;
+  }
+}
 
 .Header-Item {
-  font: bold clamp(8px, 2vw, 20px) Arial, sans-serif;
+  font:
+    bold clamp(8px, 2vw, 20px) Arial,
+    sans-serif;
   color: #fff;
   padding: 6px 8px;
   text-align: center;
@@ -88,11 +148,24 @@ html, body {
   cursor: pointer;
 }
 
-@media (min-width: 500px) { .Header-Item { padding: 8px 10px; } }
-@media (min-width: 768px) { .Header-Item { padding: 10px 16px; } }
+@media (min-width: 500px) {
+  .Header-Item {
+    padding: 8px 10px;
+  }
+}
+@media (min-width: 768px) {
+  .Header-Item {
+    padding: 10px 16px;
+  }
+}
 
-.Header-Item:hover  { background-color: rgb(35, 35, 35); color: rgb(186, 186, 186); }
-.Header-Item:active { background-color: rgb(92, 92, 92); }
+.Header-Item:hover {
+  background-color: rgb(35, 35, 35);
+  color: rgb(186, 186, 186);
+}
+.Header-Item:active {
+  background-color: rgb(92, 92, 92);
+}
 
 .Hero {
   width: min(90vw, 800px);
@@ -112,13 +185,17 @@ html, body {
 }
 
 .Hero-Header {
-  font: bold clamp(20px, 5vw, 30px) Arial, sans-serif;
+  font:
+    bold clamp(20px, 5vw, 30px) Arial,
+    sans-serif;
   color: #fff;
   margin-bottom: 16px;
 }
 
 .Hero-Item {
-  font: clamp(13px, 2.5vw, 20px) Arial, sans-serif;
+  font:
+    clamp(13px, 2.5vw, 20px) Arial,
+    sans-serif;
   color: #fff;
   margin: 8px 0;
   padding: 6px 0;
@@ -126,7 +203,9 @@ html, body {
 }
 
 .Hero-special {
-  font: clamp(12px, 1.5vw, 16px) Arial, sans-serif;
+  font:
+    clamp(12px, 1.5vw, 16px) Arial,
+    sans-serif;
   color: rgb(186, 186, 186);
   animation: slideUp 4.5s ease forwards;
   margin: 4px 0;
@@ -148,11 +227,22 @@ html, body {
   scrollbar-width: none;
 }
 
-@media (min-width: 500px)  { .About { top: 75px; } }
-@media (min-width: 768px)  { .About { top: 85px; border-radius: 40px; } }
+@media (min-width: 500px) {
+  .About {
+    top: 75px;
+  }
+}
+@media (min-width: 768px) {
+  .About {
+    top: 85px;
+    border-radius: 40px;
+  }
+}
 
 .About-Content {
-  font: clamp(12px, 2vw, 15px) Arial, sans-serif;
+  font:
+    clamp(12px, 2vw, 15px) Arial,
+    sans-serif;
   line-height: 1.6;
   animation: slideUp 0.5s ease forwards;
 }
@@ -161,12 +251,14 @@ html, body {
   display: flex;
   align-items: top;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   border-bottom: 1px solid rgb(92, 92, 92);
 }
 
 .About-Title {
-  font: bold clamp(20px, 4vw, 28px) Arial, sans-serif;
+  font:
+    bold clamp(20px, 4vw, 28px) Arial,
+    sans-serif;
   color: #fff;
   margin-bottom: 10px;
 }
@@ -184,7 +276,9 @@ html, body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
   margin-right: 1vh;
 }
 
@@ -214,7 +308,9 @@ html, body {
 .QRScanner-Title,
 .URLScanner-Title,
 .FileScanner-Title {
-  font: bold clamp(20px, 5vw, 30px) Arial, sans-serif;
+  font:
+    bold clamp(20px, 5vw, 30px) Arial,
+    sans-serif;
   color: #fff;
   text-align: center;
 }
@@ -228,6 +324,15 @@ html, body {
   margin: 0 auto;
 }
 
+.Info {
+  font:
+    clamp(12px, 2.5vw, 16px) Arial,
+    sans-serif;
+  color: rgb(186, 186, 186);
+  text-align: center;
+  margin: 0;
+}
+
 .StartButton {
   width: 140px;
   height: 45px;
@@ -238,7 +343,9 @@ html, body {
   cursor: pointer;
   margin: 0 auto;
   display: block;
-  font: clamp(13px, 2.5vw, 16px) Arial, sans-serif;
+  font:
+    clamp(13px, 2.5vw, 16px) Arial,
+    sans-serif;
 }
 
 .StartButton:hover {
@@ -259,7 +366,9 @@ html, body {
   cursor: pointer;
   margin: 0 auto;
   display: block;
-  font: clamp(13px, 2.5vw, 16px) Arial, sans-serif;
+  font:
+    clamp(13px, 2.5vw, 16px) Arial,
+    sans-serif;
 }
 
 .StopButton:hover {
@@ -273,7 +382,9 @@ html, body {
 .QRScanner-Data,
 .URLScanResult,
 .FileScanResult {
-  font: clamp(13px, 3vw, 18px) Arial, sans-serif;
+  font:
+    clamp(13px, 3vw, 18px) Arial,
+    sans-serif;
   background-color: #000;
   color: rgb(186, 186, 186);
   border: 1px solid rgb(92, 92, 92);
@@ -285,12 +396,17 @@ html, body {
 
 @media (min-width: 600px) {
   .QRScanner-Data,
-  .URLScanResult { width: 80%; margin: 0 auto; }
+  .URLScanResult {
+    width: 80%;
+    margin: 0 auto;
+  }
 }
 
 @media (min-width: 768px) {
   .QRScanner-Data,
-  .URLScanResult { width: 60%; }
+  .URLScanResult {
+    width: 60%;
+  }
 }
 
 .URLInput,
@@ -298,7 +414,9 @@ html, body {
   width: 100%;
   max-width: 500px;
   height: 45px;
-  font: clamp(13px, 3vw, 18px) Arial, sans-serif;
+  font:
+    clamp(13px, 3vw, 18px) Arial,
+    sans-serif;
   padding: 10px 15px;
   border-radius: 12px;
   border: 1px solid rgb(92, 92, 92);
@@ -308,7 +426,9 @@ html, body {
   display: block;
 }
 
-.FileScannerInput { cursor: pointer; }
+.FileScannerInput {
+  cursor: pointer;
+}
 
 .ScanButton,
 .FileScanButton {
@@ -321,27 +441,43 @@ html, body {
   cursor: pointer;
   margin: 0 auto;
   display: block;
-  font: clamp(13px, 2.5vw, 16px) Arial, sans-serif;
+  font:
+    clamp(13px, 2.5vw, 16px) Arial,
+    sans-serif;
 }
 
 .ScanButton:hover,
-.FileScanButton:hover  { background-color: rgb(60, 60, 60); }
+.FileScanButton:hover {
+  background-color: rgb(60, 60, 60);
+}
 
 .ScanButton:active,
-.FileScanButton:active { background-color: rgb(92, 92, 92); }
+.FileScanButton:active {
+  background-color: rgb(92, 92, 92);
+}
 
-.Risk-Low     { color: #22c55e; }
-.Risk-High    { color: #ef4444; }
-.Risk-Pending { color: #f59e0b; }
+.Risk-Low {
+  color: #22c55e;
+}
+.Risk-High {
+  color: #ef4444;
+}
+.Risk-Pending {
+  color: #f59e0b;
+}
 
 .link {
-  font: clamp(11px, 2.5vw, 16px) Arial, sans-serif;
+  font:
+    clamp(11px, 2.5vw, 16px) Arial,
+    sans-serif;
   color: #60a5fa;
   word-break: break-all;
 }
 
 .FileScanResult-Hash {
-  font: bold clamp(9px, 1.5vw, 15px) Arial, sans-serif;
+  font:
+    bold clamp(9px, 1.5vw, 15px) Arial,
+    sans-serif;
   word-break: break-all;
 }
 
@@ -359,6 +495,25 @@ html, body {
   border-radius: 50px 50px 50px 50px;
 }
 
+.History-Delete-Icon {
+  position: relative;
+  top: -15vh;
+  right: -48vh;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border-radius: 30%;
+  transition: background-color 0.15s ease;
+}
+
+.History-Delete-Icon:hover {
+  background-color: rgb(50, 50, 50);
+}
+
+.History-Delete-Icon:active {
+  background-color: rgb(92, 92, 92);
+}
+
 .History-Header {
   display: flex;
   align-items: top;
@@ -370,9 +525,10 @@ html, body {
 
 .History-Title {
   color: #fff;
-  font: bold clamp(20px, 4vw, 28px) Arial, sans-serif;
+  font:
+    bold clamp(20px, 4vw, 28px) Arial,
+    sans-serif;
   margin-right: 20vh;
-  
 }
 
 .History-Close {
@@ -388,7 +544,9 @@ html, body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
   margin-right: 1vh;
 }
 
@@ -414,7 +572,9 @@ html, body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .History-Clear:hover {
@@ -435,11 +595,15 @@ html, body {
   background-color: rgb(18, 18, 18);
 }
 
-.History-Content::-webkit-scrollbar { display: none; }
+.History-Content::-webkit-scrollbar {
+  display: none;
+}
 
 .History-Title {
   color: #fff;
-  font: bold 22px Arial, sans-serif;
+  font:
+    bold 22px Arial,
+    sans-serif;
   margin-bottom: 16px;
 }
 
@@ -463,11 +627,16 @@ html, body {
   background-color: #000;
   border-top: 1px solid rgb(92, 92, 92);
   color: #fff;
-  font: clamp(12px, 2vw, 16px) Arial, sans-serif;
+  font:
+    clamp(12px, 2vw, 16px) Arial,
+    sans-serif;
 }
 
 .SafeShield,
-.UnsafeShield { display: block; margin: 10px auto; }
+.UnsafeShield {
+  display: block;
+  margin: 10px auto;
+}
 
 .Shield {
   fill: none;
@@ -519,5 +688,9 @@ html, body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+  }
 }

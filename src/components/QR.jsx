@@ -12,13 +12,24 @@ export default function QRScanner() {
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
   const scanningRef = useRef(false);
+  const frameRef = useRef(null);
+
   const [qrCodeData, setQrCodeData] = useState(null);
   const [url, setURL] = useState(null);
   const [status, setStatus] = useState(null);
   const [cameraError, setCameraError] = useState(null);
   const [cameraStarted, setCameraStarted] = useState(false);
 
+  const permission = navigator.permissions.query({ name: "camera" });
+
   async function startCamera() {
+    if (permission.state === "denied") {
+      setCameraError("Camera access denied. Please enable camera access in your browser settings.");
+      return;
+    }
+
+    console.log("Permission:", permission);
+
     try {
       setCameraStarted(true);
       setCameraError(null);
@@ -32,7 +43,7 @@ export default function QRScanner() {
         videoRef.current.srcObject = stream;
 
         await new Promise((resolve) => {
-          videoRef.current.onloadedmetadata = () => resolve();
+          videoRef.current.onloadedmetadata = resolve;
         });
 
         await videoRef.current.play();
@@ -82,7 +93,6 @@ export default function QRScanner() {
             message: "Invalid QR",
             threats: [],
           });
-
           scanningRef.current = false;
           return;
         }
@@ -117,43 +127,22 @@ export default function QRScanner() {
           }, 2000);
         }
       }
-      requestAnimationFrame(scan);
+      frameRef.current = requestAnimationFrame(scan);
     };
-
     scan();
   }
 
   useEffect(() => {
     if (!cameraStarted) return;
 
-    async function setupCamera() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" },
-        });
-        streamRef.current = stream;
+    startCamera();
 
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-
-          await new Promise((resolve) => {
-            videoRef.current.onloadedmetadata = resolve;
-          });
-
-          await videoRef.current.play();
-          scanQRCode();
-        }
-      } catch (error) {
-        setCameraError(error.message);
-        setCameraStarted(false);
-        console.error("Error accessing camera:", error);
-      }
-    }
-
-    setupCamera();
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop());
+      }
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
       }
     };
   }, [cameraStarted]);
@@ -162,11 +151,20 @@ export default function QRScanner() {
     <div id="QRScanner" className="QRScanner">
       <h1 className="QRScanner-Title">QR Scanner:</h1>
 
+      {permission && permission.state === "denied" && (
+        <p className="Info">Camera access denied. Please enable camera access in your browser settings.</p>
+      )}
+
       {!cameraStarted ? (
         <>
-          <button onClick={startCamera} className="StartButton">
+          <button
+            onClick={() => setCameraStarted(true)}
+            className="StartButton"
+          >
             Start Camera
           </button>
+
+          <p className="Info">Click the button to start the camera and scan a QR code.</p>
         </>
       ) : (
         <>

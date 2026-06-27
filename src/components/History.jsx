@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api";
+import DeleteIcon from "../assets/Delete-Icon.png";
 
 export default function History({ onClose }) {
   const [history, setHistory] = useState([]);
@@ -26,6 +27,15 @@ export default function History({ onClose }) {
     }
   };
 
+  const DeleteItem = async (id) => {
+    try {
+      await api.delete(`/API/scans/${id}`);
+      setHistory(history.filter((scan) => scan.id !== id));
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
   return (
     <div className="History">
       <div className="History-Content">
@@ -48,6 +58,7 @@ export default function History({ onClose }) {
               <p><strong>Status:</strong> {scan.status}</p>
               <p><strong>Risk:</strong> {scan.risk_level}</p>
               <p>{new Date(scan.created_at).toLocaleString()}</p>
+              <img src={DeleteIcon} alt="Delete" className="History-Delete-Icon" onClick={() => DeleteItem(scan.id)} />
             </div>
           ))
         )}

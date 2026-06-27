@@ -4,11 +4,7 @@ import dotenv from "dotenv";
 import scanURL from "./routes/URLscanRoutes.js";
 import scanFile from "./routes/FilescanRoutes.js";
 import db from "./db.js";
-import {
-  apiLimiter,
-  scanLimiter,
-  fileLimiter,
-} from "./middleware/rateLimiter.js";
+import { apiLimiter, scanLimiter, fileLimiter} from "./middleware/rateLimiter.js";
 
 dotenv.config();
 

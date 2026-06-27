@@ -145,3 +145,21 @@ export async function clearScanResults(req, res) {
     res.status(500).json({ result: "Error clearing scan results" });
   }
 }
+
+export async function deleteScan(req, res) {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Invalid ID" });
+  }
+
+  const query = `DELETE FROM scans WHERE id = $1`;
+
+  try {
+    await db.query(query, [id]);
+    res.json({ result: "Scan deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting scan:", err);
+    res.status(500).json({ result: "Error deleting scan" });
+  }
+}
