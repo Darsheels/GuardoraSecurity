@@ -23,8 +23,22 @@ export default function QRScanner() {
   const permission = navigator.permissions.query({ name: "camera" });
 
   async function startCamera() {
+    const isSecure =
+      window.isSecureContext ||
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1";
+
+    if (!isSecure) {
+      setCameraError(
+        "Camera access requires a secure context (HTTPS or localhost).",
+      );
+      return;
+    }
+
     if (permission.state === "denied") {
-      setCameraError("Camera access denied. Please enable camera access in your browser settings.");
+      setCameraError(
+        "Camera access denied. Please enable camera access in your browser settings.",
+      );
       return;
     }
 
@@ -152,7 +166,10 @@ export default function QRScanner() {
       <h1 className="QRScanner-Title">QR Scanner:</h1>
 
       {permission && permission.state === "denied" && (
-        <p className="Info">Camera access denied. Please enable camera access in your browser settings.</p>
+        <p className="Info">
+          Camera access denied. Please enable camera access in your browser
+          settings.
+        </p>
       )}
 
       {!cameraStarted ? (
@@ -164,7 +181,9 @@ export default function QRScanner() {
             Start Camera
           </button>
 
-          <p className="Info">Click the button to start the camera and scan a QR code.</p>
+          <p className="Info">
+            Click the button to start the camera and scan a QR code.
+          </p>
         </>
       ) : (
         <>
@@ -191,6 +210,10 @@ export default function QRScanner() {
       <div className="QRScanner-Data">
         {qrCodeData?.risk === "Low" && (
           <p className="Risk-Low">Risk:{qrCodeData?.risk}</p>
+        )}
+
+        {qrCodeData?.risk === "Medium" && (
+          <p className="Risk-Medium">Risk:{qrCodeData?.risk}</p>
         )}
 
         {qrCodeData?.risk === "High" && (

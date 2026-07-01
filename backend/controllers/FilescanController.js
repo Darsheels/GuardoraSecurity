@@ -4,6 +4,7 @@ import fs from "fs";
 import axios from "axios";
 import FormData from "form-data";
 import os from "os";
+import db from "../db.js";
 
 async function checkVirusTotal(hash) {
   try {
@@ -57,6 +58,9 @@ export async function FileScan(req, res) {
     const virusTotalResult = await checkVirusTotal(hash);
 
     let risk = "Low";
+    let filename = req.file?.originalname ?? null;
+    let message = "File scanned successfully";
+    const sessionId = req.headers["x-session-id"];
 
     if (virusTotalResult.found) {
       fs.unlinkSync(req.file.path);
@@ -69,18 +73,25 @@ export async function FileScan(req, res) {
         risk = "Low";
       }
 
+    const status =
+      risk === "Critical"
+        ? "Dangerous"
+        : risk === "High"
+          ? "Potentially Unwanted"
+          : "Safe";
+
+    await db.query(
+      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+      ["File", filename, risk, status, message, sessionId],
+    );
+
       return res.json({
         filename: req.file.originalname,
         hash: hash,
         fileSize: req.file.size,
         fileType: req.file.mimetype,
-        status:
-          risk === "Critical"
-            ? "Dangerous"
-            : risk === "High"
-              ? "Potentially Unwanted"
-              : "Safe",
-        risk,
+        status: status,
+        risk: risk,
         detections: virusTotalResult.detections,
         message: virusTotalResult.found
           ? "File scanned successfully"
@@ -111,7 +122,9 @@ export async function FileScan(req, res) {
       fileSize: req.file.size,
       fileType: req.file.mimetype,
       hash: hash,
+      source: "VirusTotal"
     });
+
   } catch (err) {
     if (req.file?.path) {
       try {
@@ -133,24 +146,23 @@ export async function FileScan(req, res) {
         }
 
         let risk = "Low";
+
         if (retry.malicious > 0) risk = "Critical";
         else if (retry.suspicious > 0) risk = "High";
 
+        
         return res.json({
           filename: req.file?.originalname ?? null,
           hash,
           fileSize: req.file?.size ?? null,
           fileType: req.file?.mimetype ?? null,
-          status:
-            risk === "Critical"
-              ? "Dangerous"
-              : risk === "High"
-                ? "Potentially Unwanted"
-                : "Safe",
+          status: risk === "Critical" ? "Dangerous" : risk === "High" ? "Potentially Unwanted" : "Safe",
           risk,
           detections: retry.detections,
           message: "File scanned successfully",
+          source: "VirusTotal"
         });
+
       } catch (retryErr) {
         console.error("Error on 409 retry:", retryErr.message);
         return res.status(500).json({
@@ -161,6 +173,7 @@ export async function FileScan(req, res) {
           filename: req.file?.originalname ?? null,
           fileSize: req.file?.size ?? null,
           fileType: req.file?.mimetype ?? null,
+          source: "VirusTotal"
         });
       }
     }
@@ -174,12 +187,14 @@ export async function FileScan(req, res) {
       filename: req.file?.originalname ?? null,
       fileSize: req.file?.size ?? null,
       fileType: req.file?.mimetype ?? null,
+      source: "VirusTotal"
     });
   }
 }
 
 export async function GetAnalysisResult(req, res) {
   const { id } = req.params;
+  const { filename } = req.query;
 
   if (!id) {
     return res
@@ -212,25 +227,38 @@ export async function GetAnalysisResult(req, res) {
       attributes.stats.suspicious +
       attributes.stats.harmless +
       attributes.stats.undetected;
+
     const stats = attributes.stats;
+    
     let risk = "Low";
+    let message = "File scanned successfully";
+    const { filename } = req.query;
+    const sessionId = req.headers["x-session-id"];    
 
     if (stats.malicious > 0) {
       risk = "Critical";
     } else if (stats.suspicious > 0) {
       risk = "High";
     }
+    
+    const status =
+      risk === "Critical"
+        ? "Dangerous"
+        : risk === "High"
+          ? "Potentially Unwanted"
+          : "Safe";
+
+    await db.query(
+      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+      ["File", filename, risk, status, message, sessionId],
+    );
 
     return res.json({
-      status:
-        risk === "Critical"
-          ? "Dangerous"
-          : risk === "High"
-            ? "Potentially Unwanted"
-            : "Safe",
-      risk,
+      status: status,
+      risk: risk,
       message: "File scanned successfully",
       detections: `${stats.malicious}/${total}`,
+      source: "VirusTotal",
 
       stats: {
         detections: `${stats.malicious}/${total}`,
@@ -240,6 +268,7 @@ export async function GetAnalysisResult(req, res) {
         undetected: stats.undetected,
       },
     });
+
   } catch (err) {
     console.error(
       "Error fetching analysis result:",
@@ -248,6 +277,7 @@ export async function GetAnalysisResult(req, res) {
     res.status(500).json({
       status: "error",
       message: "Error fetching analysis result",
+      source: "VirusTotal"
     });
   }
-}
+} 

@@ -42,6 +42,7 @@ export default function URLScanner() {
         status: data?.status || "unknown",
         message: data?.message || "",
         threats: Array.isArray(data?.threats) ? data.threats : [],
+        source: data?.source || "unknown",
       });
 
       setStatus(data?.status || "unknown");
@@ -74,6 +75,10 @@ export default function URLScanner() {
           <p className="Risk-Low">Risk: {scanResult?.risk}</p>
         )}
 
+        {scanResult?.risk === "Medium" && (
+          <p className="Risk-Medium">Risk: {scanResult?.risk}</p>
+        )}
+
         {scanResult?.risk === "High" && (
           <p className="Risk-High">Risk: {scanResult?.risk}</p>
         )}
@@ -88,7 +93,7 @@ export default function URLScanner() {
               scanResult.threats.length > 0 && (
                 <ul>
                   {scanResult.threats.map((threat, index) => (
-                    <li key={index}>
+                    <li key={index} className="Threat-Item">
                       <strong>{threat.threatType}</strong> |{" "}
                       {threat.platformType} | {threat.threatEntryType} |{" "}
                       {threat.matchedURL}
@@ -98,6 +103,8 @@ export default function URLScanner() {
               )}
           </div>
         )}
+
+        <p>Source: {scanResult?.source}</p>
 
         {status === "Safe" && <SafeShield />}
 

@@ -54,7 +54,8 @@ export default function History({ onClose }) {
         ) : (
           history.map((scan) => (
             <div key={scan.id} className="History-Item">
-              <p><strong>URL:</strong> {scan.url}</p>
+              <p><strong>Type:</strong> {scan.scan_type}</p>
+              <p><strong>Name:</strong> {scan.name}</p>
               <p><strong>Status:</strong> {scan.status}</p>
               <p><strong>Risk:</strong> {scan.risk_level}</p>
               <p>{new Date(scan.created_at).toLocaleString()}</p>

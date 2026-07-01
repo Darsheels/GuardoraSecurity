@@ -39,7 +39,9 @@ export default function FileScanner() {
     pollingAttemptsRef.current += 1;
 
     try {
-      const response = await api.get(`/API/filescan/result/${id}`);
+      const response = await api.get(`/API/filescan/result/${id}`, {
+        params: { filename: meta?.filename },
+      });
       const data = response.data;
 
       if (data?.status === "processing") {
@@ -58,6 +60,7 @@ export default function FileScanner() {
         fileType: meta.fileType || "Unknown",
         filename: meta.filename || "Unknown",
         detections: data?.detections || "Unknown",
+        source: data?.source || "Unknown",
       });
       setStatus(data?.status || "Unknown");
     } catch (error) {
@@ -125,6 +128,7 @@ export default function FileScanner() {
           fileType: data?.fileType || "Unknown",
           detections: data?.detections || "Unknown",
           filename: data?.filename || "Unknown",
+          source: data?.source || "Unknown",
         });
         setStatus("processing");
 
@@ -151,6 +155,7 @@ export default function FileScanner() {
         fileType: data?.fileType || "Unknown",
         detections: data?.detections || "Unknown",
         filename: data?.filename || "Unknown",
+        source: data?.source || "Unknown",
       });
 
       setStatus(data?.status || "Unknown");
@@ -165,6 +170,7 @@ export default function FileScanner() {
         fileType: "Unknown",
         filename: file?.name || "Unknown",
         detections: "Unknown",
+        source: "Unknown",
       });
     }
   };
@@ -199,6 +205,7 @@ export default function FileScanner() {
         <p>Detection: {result?.detections}</p>
         <p className="FileScanResult-Hash">SHA256: {result?.hash}</p>
         <p>Message: {result?.message}</p>
+        <p>Source: {result?.source}</p>
 
         {status === "processing" && (
           <p className="Risk-Pending">

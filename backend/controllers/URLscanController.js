@@ -1,6 +1,39 @@
 import axios from "axios";
 import db from "../db.js";
 
+async function checkVirusTotalURL(url) {
+  try {
+    const urlId = Buffer.from(url).toString("base64url").replace(/=+$/, "");
+
+    const response = await axios.get(
+      `https://www.virustotal.com/api/v3/urls/${urlId}`,
+      {
+        headers: { "x-apikey": process.env.VirusTotal_API_KEY },
+      },
+    );
+
+    const stats = response.data.data.attributes.last_analysis_stats;
+    return {
+      found: true,
+      malicious: stats.malicious,
+      suspicious: stats.suspicious,
+    };
+  } catch (error) {
+    if (error.response?.status === 404) {
+      try {
+        await axios.post(
+          "https://www.virustotal.com/api/v3/urls",
+          new URLSearchParams({ url }),
+          { headers: { "x-apikey": process.env.VirusTotal_API_KEY } },
+        );
+      } catch (_) {}
+
+      return { found: false };
+    }
+    return { found: false };
+  }
+}
+
 export async function ScanURL(req, res) {
   const { url } = req.query;
 
@@ -9,21 +42,24 @@ export async function ScanURL(req, res) {
   }
 
   if (!process.env.GOOGLE_SAFE_BROWSING_KEY) {
-    return res.status(500).json({
-      result: "Safe Browsing API key not configured",
-    });
+    return res
+      .status(500)
+      .json({ result: "Safe Browsing API key not configured" });
   }
 
   try {
-    const response = await axios.post(
+  
+    const gsbResponse = await axios.post(
       `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${process.env.GOOGLE_SAFE_BROWSING_KEY}`,
       {
-        client: {
-          clientId: "GuardoraSecurity",
-          clientVersion: "1.0",
-        },
+        client: { clientId: "GuardoraSecurity", clientVersion: "1.0" },
         threatInfo: {
-          threatTypes: ["MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE"],
+          threatTypes: [
+            "MALWARE",
+            "SOCIAL_ENGINEERING",
+            "UNWANTED_SOFTWARE",
+            "POTENTIALLY_HARMFUL_APPLICATION",
+          ],
           platformTypes: ["ANY_PLATFORM"],
           threatEntryTypes: ["URL"],
           threatEntries: [{ url }],
@@ -31,79 +67,74 @@ export async function ScanURL(req, res) {
       },
     );
 
-    const matches = response.data.matches || [];
-
+    const matches = gsbResponse.data.matches || [];
     const sessionId = req.headers["x-session-id"];
 
-    if (matches.length === 0) {
+    if (matches.length > 0) {
+      const isUnwantedOnly =
+        matches.every((m) => m.threatType === "UNWANTED_SOFTWARE") &&
+        matches.length === 1;
+
+      const risk_level = isUnwantedOnly ? "Medium" : "High";
+      const status = isUnwantedOnly ? "Potentially Unwanted" : "Dangerous";
+      const message = isUnwantedOnly
+        ? "This URL is associated with unwanted software"
+        : "Threats detected for this URL";
+
       await db.query(
-        `INSERT INTO scans (url, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5)`,
-        [url, "Low", "Safe", "No threats detected",sessionId],
-        (err) => {
-          if (err) {
-            console.error("Error adding scan result to database:", err);
-          }
-        },
+        `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+        ["url", url, risk_level, status, message, sessionId],
       );
 
       return res.json({
         success: true,
         url,
-        risk_level: "Low",
-        status: "Safe",
-        message: "No threats detected",
-        source: "Google Safe Browsing",
+        risk_level,
+        status,
+        message,
+        source: "Google Safe Browsing + VirusTotal",
+        threats: matches.map((m) => ({
+          threatType: m.threatType,
+          platformType: m.platformType,
+          threatEntryType: m.threatEntryType,
+          matchedURL: m.threat?.url || url,
+        })),
       });
     }
 
-    if (matches.length === 1) {
-      if (matches.some((m) => m.threatType === "UNWANTED_SOFTWARE")) {
-        await db.query(
-          `INSERT INTO scans (url, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5)`,
-          [
-            url, "Medium","Potentially Unwanted","This URL is associated with unwanted software",sessionId],
-          (err) => {
-            if (err) {
-              console.error("Error adding scan result to database:", err);
-            }
-          },
-        );
+    const vtResult = await checkVirusTotalURL(url);
 
-        return res.json({
-          success: true,
-          url,
-          risk_level: "Medium",
-          status: "Potentially Unwanted",
-          message: "This URL is associated with unwanted software",
-          source: "Google Safe Browsing",
-        });
+    let risk_level = "Low";
+    let status = "Safe";
+    let message = "No threats detected";
+    let source = "Google Safe Browsing + VirusTotal";
+
+    if (vtResult.found) {
+      if (vtResult.malicious > 2) {
+        risk_level = "High";
+        status = "Dangerous";
+        message = `Flagged as malicious by ${vtResult.malicious} security vendors`;
+      } else if (vtResult.malicious > 0 || vtResult.suspicious > 2) {
+        risk_level = "Medium";
+        status = "Potentially Unwanted";
+        message = `Flagged as suspicious by ${vtResult.malicious + vtResult.suspicious} security vendors`;
       }
     }
 
     await db.query(
-      `INSERT INTO scans (url, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5)`,
-      [url, "High", "Dangerous", "Threats detected for this URL", sessionId],
-      (err) => {
-        if (err) {
-          console.error("Error adding scan result to database:", err);
-        }
-      },
+      `INSERT INTO scans (scan_type , name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+      ["URL", url, risk_level, status, message, sessionId],
     );
 
     return res.json({
       success: true,
       url,
-      risk_level: "High",
-      status: "Dangerous",
-      message: "Threats detected for this URL",
-      source: "Google Safe Browsing",
-      threats: matches.map((m) => ({
-        threatType: m.threatType,
-        platformType: m.platformType,
-        threatEntryType: m.threatEntryType,
-        matchedURL: m.threat?.url || url,
-      })),
+      risk_level,
+      status,
+      message,
+      source,
     });
+
   } catch (error) {
     console.error("Error scanning URL:", error.response?.data || error.message);
     res.status(500).json({ result: "Error scanning URL" });
