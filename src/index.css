@@ -136,16 +136,22 @@ body {
 
 .Header-Item {
   font:
-    bold clamp(8px, 2vw, 20px) Arial,
+    600 clamp(8px, 2vw, 20px) Arial,
     sans-serif;
   color: #fff;
-  padding: 6px 8px;
+  padding: 8px 12px;
   text-align: center;
   white-space: nowrap;
   text-decoration: none;
-  border: none;
-  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
   cursor: pointer;
+  background: rgba(255, 255, 255, 0.04);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 @media (min-width: 500px) {
@@ -160,11 +166,14 @@ body {
 }
 
 .Header-Item:hover {
-  background-color: rgb(35, 35, 35);
-  color: rgb(186, 186, 186);
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #fff;
+  transform: translateY(-1px);
 }
 .Header-Item:active {
-  background-color: rgb(92, 92, 92);
+  background-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(0);
 }
 
 .Hero {
@@ -216,7 +225,7 @@ body {
   top: 65px;
   right: 0;
   width: min(90vw, 300px);
-  max-height: min(90vh, 320px);
+  max-height: min(90vh, 420px);
   padding: 24px;
   border-radius: 20px;
   border: 1px solid rgb(92, 92, 92);
@@ -249,27 +258,30 @@ body {
 
 .About-Header {
   display: flex;
-  align-items: top;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
-  border-bottom: 1px solid rgb(92, 92, 92);
+  gap: 10px;
+  padding: 0 0 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .About-Title {
   font:
-    bold clamp(20px, 4vw, 28px) Arial,
+    600 clamp(18px, 3.2vw, 24px) Arial,
     sans-serif;
   color: #fff;
-  margin-bottom: 10px;
+  margin: 0;
+  letter-spacing: 0.02em;
 }
 
 .About-Close {
-  background: none;
-  border: 1px solid rgb(92, 92, 92);
-  color: rgb(186, 186, 186);
-  font-size: 16px;
-  width: 32px;
-  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgb(220, 220, 220);
+  font-size: 13px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -277,18 +289,22 @@ body {
   justify-content: center;
   flex-shrink: 0;
   transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
-  margin-right: 1vh;
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .About-Close:hover {
-  background-color: rgb(50, 50, 50);
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
   color: #fff;
+  transform: translateY(-1px);
 }
 
 .About-Close:active {
-  background-color: rgb(92, 92, 92);
+  background-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(0);
 }
 
 .QRScanner,
@@ -341,50 +357,45 @@ body {
   margin: 0;
 }
 
-.StartButton {
+.StartButton,
+.StopButton,
+.ScanButton,
+.FileScanButton {
   width: 140px;
   height: 45px;
-  border: none;
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
   color: #fff;
-  background-color: rgb(40, 40, 40);
+  background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
   margin: 0 auto;
   display: block;
   font:
-    clamp(13px, 2.5vw, 16px) Arial,
+    600 clamp(13px, 2.5vw, 16px) Arial,
     sans-serif;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.StartButton:hover {
-  background-color: rgb(60, 60, 60);
-}
-
-.StartButton:active {
-  background-color: rgb(92, 92, 92);
-}
-
-.StopButton {
-  width: 140px;
-  height: 45px;
-  border: none;
-  border-radius: 12px;
+.StartButton:hover,
+.StopButton:hover,
+.ScanButton:hover,
+.FileScanButton:hover {
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
   color: #fff;
-  background-color: rgb(40, 40, 40);
-  cursor: pointer;
-  margin: 0 auto;
-  display: block;
-  font:
-    clamp(13px, 2.5vw, 16px) Arial,
-    sans-serif;
+  transform: translateY(-1px);
 }
 
-.StopButton:hover {
-  background-color: rgb(60, 60, 60);
-}
-
-.StopButton:active {
-  background-color: rgb(92, 92, 92);
+.StartButton:active,
+.StopButton:active,
+.ScanButton:active,
+.FileScanButton:active {
+  background-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(0);
 }
 
 .QRScanner-Data,
@@ -438,31 +449,6 @@ body {
   cursor: pointer;
 }
 
-.ScanButton,
-.FileScanButton {
-  width: 140px;
-  height: 45px;
-  border: none;
-  border-radius: 12px;
-  color: #fff;
-  background-color: rgb(40, 40, 40);
-  cursor: pointer;
-  margin: 0 auto;
-  display: block;
-  font:
-    clamp(13px, 2.5vw, 16px) Arial,
-    sans-serif;
-}
-
-.ScanButton:hover,
-.FileScanButton:hover {
-  background-color: rgb(60, 60, 60);
-}
-
-.ScanButton:active,
-.FileScanButton:active {
-  background-color: rgb(92, 92, 92);
-}
 
 .Risk-Low {
   color: #22c55e;
@@ -508,101 +494,122 @@ body {
   border-radius: 50px 50px 50px 50px;
 }
 
-.History-Delete-Icon {
-  position: relative;
-  top: -15vh;
-  right: -48vh;
-  width: 20px;
-  height: 20px;
+.History-Delete-Button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgb(220, 220, 220);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  border-radius: 30%;
-  transition: background-color 0.15s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.History-Delete-Icon:hover {
-  background-color: rgb(50, 50, 50);
+.History-Delete-Button:hover {
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #fff;
+  transform: translateY(-1px);
 }
 
-.History-Delete-Icon:active {
-  background-color: rgb(92, 92, 92);
+.History-Delete-Button:active {
+  transform: translateY(0);
 }
 
 .History-Header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
-  align-items: top;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  gap: 12px;
+  padding: 16px 18px;
   border-bottom: 1px solid rgb(92, 92, 92);
-  margin-top: -8vh;
+  background-color: rgba(18, 18, 18, 0.98);
+  backdrop-filter: blur(10px);
+}
+
+.History-Actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
 }
 
 .History-Title {
-  color: #fff;
   font:
-    bold clamp(20px, 4vw, 28px) Arial,
+    600 clamp(18px, 3.2vw, 24px) Arial,
     sans-serif;
-  margin-right: 20vh;
+  color: #fff;
+  margin: 2.5vh;
+  letter-spacing: 0.02em;
+}
+
+.History-Close,
+.History-Clear,
+.About-Close {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgb(220, 220, 220);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .History-Close {
-  background: none;
-  border: 1px solid rgb(92, 92, 92);
-  color: rgb(186, 186, 186);
-  font-size: 16px;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
-  margin-right: 1vh;
-}
-
-.History-Close:hover {
-  background-color: rgb(50, 50, 50);
-  color: #fff;
-}
-
-.History-Close:active {
-  background-color: rgb(92, 92, 92);
+  font-size: 13px;
 }
 
 .History-Clear {
-  background: none;
-  border: 1px solid rgb(92, 92, 92);
-  color: rgb(186, 186, 186);
+  min-width: 70px;
+  height: 34px;
+  border-radius: 999px;
+  padding: 0 12px;
   font-size: 12px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
+.History-Close:hover,
 .History-Clear:hover {
-  background-color: rgb(50, 50, 50);
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
   color: #fff;
+  transform: translateY(-1px);
 }
 
+.History-Close:active,
 .History-Clear:active {
-  background-color: rgb(92, 92, 92);
+  background-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(0);
 }
 
 .History-Content {
   height: 100%;
   color: #fff;
-  padding: 80px 16px 20px;
+  padding: 10px 16px 20px;
   overflow-y: auto;
   scrollbar-width: none;
   background-color: rgb(18, 18, 18);
@@ -621,10 +628,12 @@ body {
 }
 
 .History-Item {
+  position: relative;
   margin: 12px 0;
-  padding: 12px;
+  padding: 14px 48px 14px 14px;
   border-radius: 12px;
-  border: 1px solid rgb(50, 50, 50);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
   font-size: 13px;
   color: rgb(186, 186, 186);
   line-height: 1.6;

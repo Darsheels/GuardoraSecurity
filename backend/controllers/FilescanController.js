@@ -41,7 +41,7 @@ async function checkVirusTotal(hash) {
 const upload = multer({
   dest: os.tmpdir(),
   limits: { fileSize: 32 * 1024 * 1024 },
-}); 
+});
 export const uploadFile = upload.single("file");
 
 export async function FileScan(req, res) {
@@ -73,22 +73,22 @@ export async function FileScan(req, res) {
         risk = "Low";
       }
 
-    const status =
-      risk === "Critical"
-        ? "Dangerous"
-        : risk === "High"
-          ? "Potentially Unwanted"
-          : "Safe";
+      const status =
+        risk === "Critical"
+          ? "Dangerous"
+          : risk === "High"
+            ? "Potentially Unwanted"
+            : "Safe";
 
-    await db.query(
-      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
-      ["File", filename, risk, status, message, sessionId],
-    );
+      await db.query(
+        `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+        ["File", filename, risk, status, message, sessionId],
+      );
 
       return res.json({
         filename: req.file.originalname,
         hash: hash,
-        fileSize: req.file.size,
+        fileSize: req.file.size + " bytes",
         fileType: req.file.mimetype,
         status: status,
         risk: risk,
@@ -96,6 +96,7 @@ export async function FileScan(req, res) {
         message: virusTotalResult.found
           ? "File scanned successfully"
           : "File not found",
+        source: "VirusTotal",
       });
     }
     const formData = new FormData();
@@ -119,12 +120,11 @@ export async function FileScan(req, res) {
       message: "File uploaded to VirusTotal, analysis pending",
       id: uploadRes.data.data.id,
       filename: req.file.originalname,
-      fileSize: req.file.size,
+      fileSize: req.file.size + " bytes",
       fileType: req.file.mimetype,
       hash: hash,
-      source: "VirusTotal"
+      source: "VirusTotal",
     });
-
   } catch (err) {
     if (req.file?.path) {
       try {
@@ -150,19 +150,22 @@ export async function FileScan(req, res) {
         if (retry.malicious > 0) risk = "Critical";
         else if (retry.suspicious > 0) risk = "High";
 
-        
         return res.json({
           filename: req.file?.originalname ?? null,
           hash,
-          fileSize: req.file?.size ?? null,
+          fileSize: req.file?.size + " bytes" ?? null,
           fileType: req.file?.mimetype ?? null,
-          status: risk === "Critical" ? "Dangerous" : risk === "High" ? "Potentially Unwanted" : "Safe",
+          status:
+            risk === "Critical"
+              ? "Dangerous"
+              : risk === "High"
+                ? "Potentially Unwanted"
+                : "Safe",
           risk,
           detections: retry.detections,
           message: "File scanned successfully",
-          source: "VirusTotal"
+          source: "VirusTotal",
         });
-
       } catch (retryErr) {
         console.error("Error on 409 retry:", retryErr.message);
         return res.status(500).json({
@@ -171,9 +174,9 @@ export async function FileScan(req, res) {
           message: "Failed to retrieve existing analysis",
           hash,
           filename: req.file?.originalname ?? null,
-          fileSize: req.file?.size ?? null,
+          fileSize: req.file?.size + " bytes" ?? null,
           fileType: req.file?.mimetype ?? null,
-          source: "VirusTotal"
+          source: "VirusTotal",
         });
       }
     }
@@ -185,9 +188,9 @@ export async function FileScan(req, res) {
       message: "Error scanning file",
       hash: hash ?? null,
       filename: req.file?.originalname ?? null,
-      fileSize: req.file?.size ?? null,
+      fileSize: req.file?.size + " bytes" ?? null,
       fileType: req.file?.mimetype ?? null,
-      source: "VirusTotal"
+      source: "VirusTotal",
     });
   }
 }
@@ -229,18 +232,18 @@ export async function GetAnalysisResult(req, res) {
       attributes.stats.undetected;
 
     const stats = attributes.stats;
-    
+
     let risk = "Low";
     let message = "File scanned successfully";
     const { filename } = req.query;
-    const sessionId = req.headers["x-session-id"];    
+    const sessionId = req.headers["x-session-id"];
 
     if (stats.malicious > 0) {
       risk = "Critical";
     } else if (stats.suspicious > 0) {
       risk = "High";
     }
-    
+
     const status =
       risk === "Critical"
         ? "Dangerous"
@@ -268,7 +271,6 @@ export async function GetAnalysisResult(req, res) {
         undetected: stats.undetected,
       },
     });
-
   } catch (err) {
     console.error(
       "Error fetching analysis result:",
@@ -277,7 +279,7 @@ export async function GetAnalysisResult(req, res) {
     res.status(500).json({
       status: "error",
       message: "Error fetching analysis result",
-      source: "VirusTotal"
+      source: "VirusTotal",
     });
   }
-} 
+}

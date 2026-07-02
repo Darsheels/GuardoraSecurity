@@ -47,11 +47,15 @@ export default function URLScanner() {
 
       setStatus(data?.status || "unknown");
     } catch (error) {
+      const isRateLimited = error.response?.status === 429;
+
       console.error("Error scanning URL:", error);
       setScanResult({
         risk: "unknown",
         status: "error",
-        message: "Error scanning URL. Please try again.",
+        message: isRateLimited
+          ? "Too many URL scans from this IP, please try again later."
+          : "Error scanning URL. Please try again.",
         threats: [],
       });
       setStatus("error");

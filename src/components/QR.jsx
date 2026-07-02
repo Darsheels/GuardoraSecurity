@@ -134,6 +134,17 @@ export default function QRScanner() {
 
           setStatus(data?.status || "unknown");
           setURL(code.data);
+        } catch (error) {
+          const isRateLimited = error.response?.status === 429;
+          console.error("Error scanning QR code URL:", error);
+          setQrCodeData({
+            risk: "unknown",
+            status: "error",
+            message: isRateLimited
+              ? "Too many URL scans from this IP, please try again later."
+              : "Error scanning QR code URL. Please try again.",
+            threats: [],
+          });
         } finally {
           setTimeout(() => {
             scanningRef.current = false;

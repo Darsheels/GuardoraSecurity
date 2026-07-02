@@ -51,6 +51,7 @@ export default function FileScanner() {
         );
         return;
       }
+
       setResult({
         status: data?.status || "Unknown",
         risk: data?.risk || "Unknown",
@@ -87,6 +88,22 @@ export default function FileScanner() {
         detections: "Unknown",
       });
       setStatus("Unknown");
+      return;
+    }
+
+    if (file && file.size > 32 * 1024 * 1024) {
+      setResult({
+        status: "Error",
+        risk: "Unknown",
+        message: "File size exceeds 32MB limit",
+        hash: "Unknown",
+        fileSize: "Unknown",
+        fileType: "Unknown",
+        filename: file?.name || "Unknown",
+        detections: "Unknown",
+        source: "Unknown",
+      });
+      setStatus("Error");
       return;
     }
 
@@ -160,11 +177,15 @@ export default function FileScanner() {
 
       setStatus(data?.status || "Unknown");
     } catch (error) {
+      const isRateLimited = error.response?.status === 429;
+
       console.error("Error scanning file:", error);
       setResult({
         status: "Error",
         risk: "Unknown",
-        message: "Unknown",
+        message: isRateLimited
+          ? "Too many file uploads from this IP, please try again later."
+          : "Unknown",
         hash: "Unknown",
         fileSize: "Unknown",
         fileType: "Unknown",
@@ -193,10 +214,9 @@ export default function FileScanner() {
           <p className="Risk-Low">Risk: {result?.risk}</p>
         )}
 
-        {result?.risk === "High" ||
-          (result?.risk === "Critical" && (
-            <p className="Risk-High">Risk: {result?.risk}</p>
-          ))}
+        {(result?.risk === "High" || result?.risk === "Critical") && (
+          <p className="Risk-High">Risk: {result?.risk}</p>
+        )}
 
         <p>Status: {result?.status}</p>
         <p>Filename: {result?.filename}</p>
