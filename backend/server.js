@@ -12,7 +12,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(cors({ origin: process.env.FRONTEND_URL }));
+const corsOptions = process.env.FRONTEND_URL
+  ? { origin: process.env.FRONTEND_URL }
+  : { origin: true };
+app.use(cors(corsOptions));
 app.use(apiLimiter);
 
 app.use("/API/URLscan", scanLimiter);
