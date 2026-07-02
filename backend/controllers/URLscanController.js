@@ -89,7 +89,7 @@ export async function ScanURL(req, res) {
 
       await db.query(
         `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
-        ["url", url, risk_level, status, message, sessionId],
+        ["URL", url, risk_level, status, message, sessionId],
       );
 
       return res.json({

@@ -11,10 +11,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.set("trust proxy", 1);
+
 app.use(express.json());
+
 const corsOptions = process.env.FRONTEND_URL
   ? { origin: process.env.FRONTEND_URL }
   : { origin: true };
+
 app.use(cors(corsOptions));
 app.use(apiLimiter);
 
