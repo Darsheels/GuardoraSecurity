@@ -47,6 +47,12 @@ export async function ScanURL(req, res) {
       .json({ result: "Safe Browsing API key not configured" });
   }
 
+  if (!process.env.VirusTotal_API_KEY) {
+    return res
+      .status(500)
+      .json({ result: "VirusTotal API key not configured" });
+  }
+
   try {
   
     const gsbResponse = await axios.post(

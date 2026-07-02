@@ -7,6 +7,10 @@ import os from "os";
 import db from "../db.js";
 
 async function checkVirusTotal(hash) {
+  if (!process.env.VirusTotal_API_KEY) {
+    throw new Error("VirusTotal API key is not configured");
+  }
+
   try {
     const response = await axios.get(
       `https://www.virustotal.com/api/v3/files/${hash}`,
