@@ -181,7 +181,12 @@ export async function FileScan(req, res) {
       }
     }
 
-    console.error("FileScan error:", err.response?.data ?? err.message);
+    console.error(
+      "FileScan error:",
+      err.response?.status,
+      err.response?.data || err.message,
+      err.stack,
+    );
     return res.status(500).json({
       status: "error",
       risk: "Unknown",

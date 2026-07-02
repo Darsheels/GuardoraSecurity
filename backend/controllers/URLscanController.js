@@ -136,7 +136,12 @@ export async function ScanURL(req, res) {
     });
 
   } catch (error) {
-    console.error("Error scanning URL:", error.response?.data || error.message);
+    console.error(
+      "Error scanning URL:",
+      error.response?.status,
+      error.response?.data || error.message,
+      error.stack,
+    );
     res.status(500).json({ result: "Error scanning URL" });
   }
 }
