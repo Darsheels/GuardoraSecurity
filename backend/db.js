@@ -14,7 +14,7 @@ const poolConfig = {
 
 if (process.env.NODE_ENV === "production" || process.env.DB_SSL === "true") {
   poolConfig.ssl = {
-    rejectUnauthorized: process.env.NODE_ENV === "production",
+    rejectUnauthorized: false,
   };
 }
 
