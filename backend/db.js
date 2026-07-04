@@ -7,13 +7,16 @@ const dbUrl = process.env.DB_URL?.trim();
 const isFullUri = dbUrl?.startsWith("postgres://") || dbUrl?.startsWith("postgresql://");
 
 const poolConfig = {
-  ssl: {
-    rejectUnauthorized: false,
-  },
   max: 10,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
 };
+
+if (process.env.NODE_ENV === "production" || process.env.DB_SSL === "true") {
+  poolConfig.ssl = {
+    rejectUnauthorized: process.env.NODE_ENV === "production",
+  };
+}
 
 if (isFullUri) {
   poolConfig.connectionString = dbUrl;

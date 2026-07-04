@@ -49,14 +49,14 @@ const upload = multer({
 export const uploadFile = upload.single("file");
 
 export async function FileScan(req, res) {
+  let hash = null;
+
   try {
     if (!req.file) {
       return res.status(400).json({ result: "No file uploaded" });
     }
 
     const fileBuffer = fs.readFileSync(req.file.path);
-    let hash;
-
     hash = crypto.createHash("sha256").update(fileBuffer).digest("hex");
 
     const virusTotalResult = await checkVirusTotal(hash);
@@ -133,7 +133,9 @@ export async function FileScan(req, res) {
     if (req.file?.path) {
       try {
         fs.unlinkSync(req.file.path);
-      } catch (_) {}
+      } catch (cleanupError) {
+        console.warn("Failed to clean up uploaded file:", cleanupError.message);
+      }
     }
 
     if (err.response?.status === 409 && hash) {
@@ -157,7 +159,7 @@ export async function FileScan(req, res) {
         return res.json({
           filename: req.file?.originalname ?? null,
           hash,
-          fileSize: req.file?.size + " bytes" ?? null,
+          fileSize: req.file?.size != null ? `${req.file.size} bytes` : null,
           fileType: req.file?.mimetype ?? null,
           status:
             risk === "Critical"
@@ -178,7 +180,7 @@ export async function FileScan(req, res) {
           message: "Failed to retrieve existing analysis",
           hash,
           filename: req.file?.originalname ?? null,
-          fileSize: req.file?.size + " bytes" ?? null,
+          fileSize: req.file?.size != null ? `${req.file.size} bytes` : null,
           fileType: req.file?.mimetype ?? null,
           source: "VirusTotal",
         });
@@ -197,7 +199,7 @@ export async function FileScan(req, res) {
       message: "Error scanning file",
       hash: hash ?? null,
       filename: req.file?.originalname ?? null,
-      fileSize: req.file?.size + " bytes" ?? null,
+      fileSize: req.file?.size != null ? `${req.file.size} bytes` : null,
       fileType: req.file?.mimetype ?? null,
       source: "VirusTotal",
     });
@@ -244,7 +246,6 @@ export async function GetAnalysisResult(req, res) {
 
     let risk = "Low";
     let message = "File scanned successfully";
-    const { filename } = req.query;
     const sessionId = req.headers["x-session-id"];
 
     if (stats.malicious > 0) {

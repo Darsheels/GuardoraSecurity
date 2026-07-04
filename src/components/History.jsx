@@ -1,21 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "../api";
 
 export default function History({ onClose }) {
   const [history, setHistory] = useState([]);
+  const panelRef = useRef(null);
 
   useEffect(() => {
-    fetchHistory();
+    let isMounted = true;
+
+    const loadHistory = async () => {
+      try {
+        const response = await api.get("/API/scans");
+        if (isMounted) {
+          setHistory(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching history:", error);
+      }
+    };
+
+    loadHistory();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const fetchHistory = async () => {
-    try {
-      const response = await api.get("/API/scans");
-      setHistory(response.data);
-    } catch (error) {
-      console.error("Error fetching history:", error);
-    }
-  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (panelRef.current && !panelRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
 
   const clearHistory = async () => {
     try {
@@ -36,14 +59,25 @@ export default function History({ onClose }) {
   };
 
   return (
-    <div className="History">
-      <div className="History-Header">
-        <h2 className="History-Title">Scan History</h2>
+    <div className="History" ref={panelRef}>
+      <div className="panel-header">
+        <div>
+          <h2 className="panel-title">Scan History</h2>
+          <p className="panel-subtitle">Your local scan history.</p>
+        </div>
         <div className="History-Actions">
-          <button className="History-Clear" onClick={clearHistory} aria-label="Clear history">
+          <button
+            className="History-Clear"
+            onClick={clearHistory}
+            aria-label="Clear history"
+          >
             Clear
           </button>
-          <button className="History-Close" onClick={onClose} aria-label="Close history">
+          <button
+            className="History-Close"
+            onClick={onClose}
+            aria-label="Close history"
+          >
             ✕
           </button>
         </div>
@@ -63,10 +97,18 @@ export default function History({ onClose }) {
               >
                 ✕
               </button>
-              <p><strong>Type:</strong> {scan.scan_type}</p>
-              <p><strong>Name:</strong> {scan.name}</p>
-              <p><strong>Status:</strong> {scan.status}</p>
-              <p><strong>Risk:</strong> {scan.risk_level}</p>
+              <p>
+                <strong>Type:</strong> {scan.scan_type}
+              </p>
+              <p>
+                <strong>Name:</strong> {scan.name}
+              </p>
+              <p>
+                <strong>Status:</strong> {scan.status}
+              </p>
+              <p>
+                <strong>Risk:</strong> {scan.risk_level}
+              </p>
               <p>{new Date(scan.created_at).toLocaleString()}</p>
             </div>
           ))

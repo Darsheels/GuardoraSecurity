@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import axios from "axios";
 import api from "../api";
 import SafeShield from "./SafeShield";
 import UnsafeShield from "./UnsafeShield";
 import WarningShield from "./WarningShield";
+import { useScanStats } from "../contexts/ScanStatsContext";
 
 const poll_interval_ms = 15000;
 const max_polling_attempts = 20;
@@ -12,6 +12,7 @@ export default function FileScanner() {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
   const [status, setStatus] = useState(null);
+  const { incrementScans } = useScanStats();
 
   const pollTimeoutRef = useRef(null);
   const pollingAttemptsRef = useRef(0);
@@ -134,6 +135,12 @@ export default function FileScanner() {
 
       const data = response.data;
       console.log("File scan result:", data);
+      const threatsDetected =
+        typeof data?.detections === "number"
+          ? data.detections
+          : data?.detections && data?.detections !== "Unknown"
+            ? 1
+            : 0;
 
       if (data?.status === "processing") {
         setResult({
@@ -148,6 +155,7 @@ export default function FileScanner() {
           source: data?.source || "Unknown",
         });
         setStatus("processing");
+        incrementScans({ scanType: "file", threatsDetected });
 
         pollTimeoutRef.current = setTimeout(
           () =>
@@ -176,6 +184,7 @@ export default function FileScanner() {
       });
 
       setStatus(data?.status || "Unknown");
+      incrementScans({ scanType: "file", threatsDetected });
     } catch (error) {
       const isRateLimited = error.response?.status === 429;
 

@@ -1,18 +1,24 @@
-import { useEffect, useRef } from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import jsQR from "jsqr";
-import axios from "axios";
 import SafeShield from "./SafeShield";
 import UnsafeShield from "./UnsafeShield";
 import WarningShield from "./WarningShield";
 import api from "../api";
+import { useScanStats } from "../contexts/ScanStatsContext";
+
+const poll_interval_ms = 15000;
+const max_polling_attempts = 20;
 
 export default function QRScanner() {
+  const { incrementScans } = useScanStats();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
   const scanningRef = useRef(false);
   const frameRef = useRef(null);
+
+  const pollTimeoutRef = useRef(null);
+  const pollingAttemptsRef = useRef(0);
 
   const [qrCodeData, setQrCodeData] = useState(null);
   const [url, setURL] = useState(null);
@@ -21,6 +27,70 @@ export default function QRScanner() {
   const [cameraStarted, setCameraStarted] = useState(false);
 
   const permission = navigator.permissions.query({ name: "camera" });
+
+  useEffect(() => {
+    return () => {
+      if (pollTimeoutRef.current) {
+        clearTimeout(pollTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const pollForResult = async (id, meta) => {
+    if (pollingAttemptsRef.current >= max_polling_attempts) {
+      setQrCodeData((prev) => ({
+        ...prev,
+        status: "error",
+        message:
+          "Analysis is taking longer than expected. Please try again later.",
+      }));
+      setStatus("error");
+      scanningRef.current = false;
+      return;
+    }
+
+    pollingAttemptsRef.current += 1;
+
+    try {
+      const response = await api.get(`/API/URLscan/result/${id}`, {
+        params: {
+          url: meta.url,
+          gsb: JSON.stringify(meta.gsb || []),
+        },
+      });
+      const data = response.data;
+
+      if (data?.status === "processing") {
+        pollTimeoutRef.current = setTimeout(
+          () => pollForResult(id, meta),
+          poll_interval_ms,
+        );
+        return;
+      }
+
+      const threats = Array.isArray(data?.threats) ? data.threats : [];
+
+      setQrCodeData({
+        risk: data?.risk_level || "unknown",
+        status: data?.status || "unknown",
+        message: data?.message || "",
+        threats,
+      });
+
+      setStatus(data?.status || "unknown");
+      incrementScans({ scanType: "qr", threatsDetected: threats.length });
+      scanningRef.current = false;
+    } catch (error) {
+      console.error("Error polling for QR URL result:", error);
+      setQrCodeData((prev) => ({
+        ...prev,
+        status: "error",
+        message: "Error polling for result",
+      }));
+      setStatus("error");
+      scanningRef.current = false;
+    }
+  };
 
   async function startCamera() {
     const isSecure =
@@ -108,8 +178,14 @@ export default function QRScanner() {
             threats: [],
           });
           scanningRef.current = false;
+          frameRef.current = requestAnimationFrame(scan);
           return;
         }
+
+        if (pollTimeoutRef.current) {
+          clearTimeout(pollTimeoutRef.current);
+        }
+        pollingAttemptsRef.current = 0;
 
         try {
           setQrCodeData({
@@ -118,6 +194,7 @@ export default function QRScanner() {
             message: "Scanning URL...",
             threats: [],
           });
+          setStatus("scanning");
 
           const response = await api.get(
             `/API/URLscan?url=${encodeURIComponent(code.data)}`,
@@ -125,15 +202,41 @@ export default function QRScanner() {
 
           const data = response.data;
 
+          setURL(code.data);
+
+          if (data?.status === "processing") {
+            setQrCodeData({
+              risk: "unknown",
+              status: "processing",
+              message: "URL submitted to VirusTotal, analysis pending...",
+              threats: [],
+            });
+            setStatus("processing");
+
+            pollTimeoutRef.current = setTimeout(
+              () =>
+                pollForResult(data?.id, {
+                  url: data?.url || code.data,
+                  gsb: data?.gsb || [],
+                }),
+              poll_interval_ms,
+            );
+            // scanningRef stays true until polling resolves
+            frameRef.current = requestAnimationFrame(scan);
+            return;
+          }
+
+          const threats = Array.isArray(data?.threats) ? data.threats : [];
+
           setQrCodeData({
             risk: data?.risk_level || "unknown",
             status: data?.status || "unknown",
             message: data?.message || "",
-            threats: Array.isArray(data?.threats) ? data.threats : [],
+            threats,
           });
 
           setStatus(data?.status || "unknown");
-          setURL(code.data);
+          incrementScans({ scanType: "qr", threatsDetected: threats.length });
         } catch (error) {
           const isRateLimited = error.response?.status === 429;
           console.error("Error scanning QR code URL:", error);
@@ -145,6 +248,7 @@ export default function QRScanner() {
               : "Error scanning QR code URL. Please try again.",
             threats: [],
           });
+          setStatus("error");
         } finally {
           setTimeout(() => {
             scanningRef.current = false;
@@ -261,6 +365,12 @@ export default function QRScanner() {
           {url}
         </a>
 
+        {status === "processing" && (
+          <p className="Risk-Pending">
+            ⏳ VirusTotal analysis pending — check back shortly.
+          </p>
+        )}
+
         {status === "Safe" && (
           <>
             <SafeShield />
@@ -273,7 +383,7 @@ export default function QRScanner() {
           </>
         )}
 
-        {status === "dangerous" && (
+        {status === "Dangerous" && (
           <>
             <UnsafeShield />
           </>
