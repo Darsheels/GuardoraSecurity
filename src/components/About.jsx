@@ -1,12 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function About({ onClose }) {
   const panelRef = useRef(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (panelRef.current && !panelRef.current.contains(event.target)) {
-        onClose();
+        setIsClosing(true);
       }
     };
 
@@ -17,13 +18,26 @@ export default function About({ onClose }) {
     };
   }, [onClose]);
 
+  const handleTransitionEnd = () => {
+    if (isClosing) {
+      onClose();
+    }
+  };
+
   return (
-    <div id="Hero" className="About" ref={panelRef}>
+    <div
+      id="Hero"
+      className={`About${isClosing ? " closing" : ""}`}
+      ref={panelRef}
+      onTransitionEnd={handleTransitionEnd}
+    >
       <div className="About-Header">
         <h1 className="About-Title">About:</h1>
         <button
           className="About-Close"
-          onClick={onClose}
+          onClick={() => {
+            setIsClosing(true);
+          }}
           aria-label="Close About"
         >
           ✕

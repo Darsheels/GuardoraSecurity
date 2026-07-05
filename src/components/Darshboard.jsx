@@ -1,12 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Dashboard({ stats, onClose }) {
   const panelRef = useRef(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (panelRef.current && !panelRef.current.contains(event.target)) {
-        onClose();
+        setIsClosing(true);
       }
     };
 
@@ -17,8 +18,18 @@ export default function Dashboard({ stats, onClose }) {
     };
   }, [onClose]);
 
+  const handleTransitionEnd = () => {
+    if (isClosing) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="dashboard" ref={panelRef}>
+    <div
+      className={`dashboard${isClosing ? " closing" : ""}`}
+      ref={panelRef}
+      onTransitionEnd={handleTransitionEnd}
+    >
       <div className="panel-header">
         <div>
           <h2 className="panel-title">Dashboard</h2>
@@ -28,14 +39,14 @@ export default function Dashboard({ stats, onClose }) {
         </div>
         <button
           className="panel-close"
-          onClick={onClose}
+          onClick={() => setIsClosing(true)}
           aria-label="Close Dashboard"
         >
           ✕
         </button>
       </div>
 
-      <div className="panel-content dashboard-content">
+      <div className="panel-content">
         <div className="stats-grid">
           <article className="stat-card">
             <span className="stat-label">Total Scans</span>

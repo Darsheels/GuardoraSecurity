@@ -5,12 +5,13 @@ import URLScanner from "./components/URL";
 import Footer from "./components/Footer";
 import FileScanner from "./components/FileScanner";
 import { ScanStatsProvider } from "./contexts/ScanStatsContext";
+import { useState } from "react";
 
 export default function App() {
   return (
     <ScanStatsProvider>
       <div className="App">
-        <Header />
+        <Header/>
         <Hero />
         <QRScanner />
         <URLScanner />

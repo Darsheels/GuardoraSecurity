@@ -223,8 +223,6 @@ export async function GetURLAnalysisResult(req, res) {
   }
 }
 
-export { checkVirusTotalURL as _checkVirusTotalURL };
-
 export async function GetScanResults(req, res) {
   const sessionId = req.headers["x-session-id"];
 

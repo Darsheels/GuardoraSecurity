@@ -97,6 +97,7 @@ body {
     bold clamp(12px, 3vw, 25px) Arial,
     sans-serif;
   white-space: nowrap;
+  flex: 0 0 auto;
   text-decoration: none;
   flex-shrink: 0;
 }
@@ -125,85 +126,20 @@ body {
   z-index: 2000;
   background-color: rgb(18, 18, 18);
   border: 1px solid rgb(92, 92, 92);
-  animation: slideUp 0.5s ease forwards;
   overflow: hidden;
   border-radius: 50px 50px 50px 50px;
-}
-
-.dashboard-header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 18px;
-  border-bottom: 1px solid rgb(92, 92, 92);
-  background-color: rgba(18, 18, 18, 0.98);
-  backdrop-filter: blur(10px);
-}
-
-.dashboard-title {
-font:
-    600 clamp(18px, 3.2vw, 24px) Arial,
-    sans-serif;
-  color: #fff;
-  margin: 2.5vh;
-  letter-spacing: 0.02em;
-}
-
-.dashboard-Close {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgb(220, 220, 220);
-  font-size: 13px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.dashboard-Close:hover {
-  background-color: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.24);
-  color: #fff;
-  transform: translateY(-1px);
-}
-
-.dashboard-Close:active {
-  background-color: rgba(255, 255, 255, 0.14);
-  transform: translateY(0);
-}
-
-.dashboard-content {
-  color: #fff;
-  padding: 20px;
-  overflow-y: auto;
   scrollbar-width: none;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 50px 50px 50px 50px;
+  overflow-y: auto;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
 
-.dashboard-item {
-  position: relative;
-  margin: 12px 0;
-  padding: 10px 48px 14px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
-  font-size: 13px;
-  color: rgb(186, 186, 186);
+.dashboard.closing {
+  opacity: 0;
+  transform: translateY(-18px);
 }
 
 .panel-header {
@@ -222,7 +158,9 @@ font:
 
 .panel-title {
   margin: 0;
-  font: 600 clamp(18px, 3.2vw, 24px) Arial, sans-serif;
+  font:
+    600 clamp(18px, 3.2vw, 24px) Arial,
+    sans-serif;
   color: #fff;
 }
 
@@ -244,7 +182,11 @@ font:
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .panel-close:hover {
@@ -264,6 +206,8 @@ font:
   overflow-y: auto;
   height: calc(100% - 88px);
   background: rgba(255, 255, 255, 0.03);
+  scrollbar-width: none;
+  animation: slideUp 0.5s ease forwards;
 }
 
 .stats-grid {
@@ -292,11 +236,17 @@ font:
   font-size: 0.85rem;
 }
 
-.Theme-Button {
+.stat-value {
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+  line-height: 1;
+  color: #fff;
+}
+
+.stat-button {
   width: 100%;
   height: 40px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 799px;
+  border-radius: 999px;
   color: #fff;
   background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
@@ -311,26 +261,16 @@ font:
     transform 0.2s ease;
 }
 
-.Theme-Button:hover {
+.stat-button:hover {
   background-color: rgba(255, 255, 255, 0.09);
   border-color: rgba(255, 255, 255, 0.24);
   color: #fff;
   transform: translateY(-1px);
 }
 
-.Theme-Button:active {
+.stat-button:active {
   background-color: rgba(255, 255, 255, 0.14);
   transform: translateY(0);
-}
-
-.stat-value {
-  font-size: clamp(1.6rem, 3vw, 2.5rem);
-  line-height: 1;
-  color: #fff;
-}
-
-.empty-state {
-  color: rgb(170, 185, 205);
 }
 
 .panel-note {
@@ -345,17 +285,14 @@ font:
   }
 }
 
-@media (min-width: 920px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 .Header-Items {
   display: flex;
-  flex-wrap: wrap;
+  /* keep items on a single row; allow horizontal scroll on narrow screens */
+  flex-wrap: nowrap;
   gap: 2px;
   margin-left: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 500px) {
@@ -387,6 +324,10 @@ font:
     border-color 0.2s ease,
     color 0.2s ease,
     transform 0.2s ease;
+}
+
+.Header-Items::-webkit-scrollbar {
+  display: none;
 }
 
 @media (min-width: 500px) {
@@ -469,6 +410,16 @@ font:
   overflow-y: auto;
   z-index: 1500;
   scrollbar-width: none;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.About.closing {
+  opacity: 0;
+  transform: translateY(-18px);
 }
 
 @media (min-width: 500px) {
@@ -684,7 +635,6 @@ font:
   cursor: pointer;
 }
 
-
 .Risk-Low {
   color: #22c55e;
 }
@@ -726,11 +676,20 @@ font:
   flex-direction: column;
   background-color: rgb(18, 18, 18);
   border: 1px solid rgb(92, 92, 92);
-  animation: slideUp 0.5s ease forwards;
   overflow: hidden;
   border-radius: 50px 50px 50px 50px;
   scrollbar-width: none;
   scrollbar-color: transparent transparent;
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.History.closing {
+  opacity: 0;
+  transform: translateY(-18px);
 }
 
 .History-Delete-Button {
@@ -765,20 +724,6 @@ font:
   transform: translateY(0);
 }
 
-.History-Header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 18px;
-  border-bottom: 1px solid rgb(92, 92, 92);
-  background-color: rgba(18, 18, 18, 0.98);
-  backdrop-filter: blur(10px);
-}
-
 .History-Actions {
   display: flex;
   align-items: center;
@@ -786,17 +731,7 @@ font:
   margin-left: auto;
 }
 
-.History-Title {
-  font:
-    600 clamp(18px, 3.2vw, 24px) Arial,
-    sans-serif;
-  color: #fff;
-  margin: 1.5vh;
-  letter-spacing: 0.02em;
-}
-
 .History-Close,
-.dashbboard-Close,
 .History-Clear,
 .About-Close {
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -814,8 +749,7 @@ font:
     transform 0.2s ease;
 }
 
-.History-Close,
-.dashbboard-Close {
+.History-Close {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -848,6 +782,7 @@ font:
 }
 
 .History-Content {
+  animation: slideUp 0.5s ease forwards;
   flex: 1 1 auto;
   min-height: 0;
   color: #fff;
@@ -861,14 +796,6 @@ font:
   display: none;
 }
 
-.History-Title {
-  color: #fff;
-  font:
-    bold 22px Arial,
-    sans-serif;
-  margin-bottom: 16px;
-}
-
 .History-Item {
   position: relative;
   margin: 12px 0;
@@ -879,6 +806,27 @@ font:
   font-size: 13px;
   color: rgb(186, 186, 186);
   line-height: 1.6;
+  max-height: 260px;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    margin 0.25s ease,
+    padding 0.25s ease,
+    max-height 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.History-Item.removing {
+  opacity: 0;
+  transform: translateX(16px);
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  max-height: 0;
+  border-color: transparent;
 }
 
 .Footer {

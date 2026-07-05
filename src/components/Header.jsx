@@ -9,7 +9,7 @@ import { useScanStats } from "../contexts/ScanStatsContext";
 export default function Header() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
-  const [isDarshboardOpen, setIsDashboardOpen] = useState(false);
+  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const { stats } = useScanStats();
 
   const nav_items = [
@@ -30,15 +30,15 @@ export default function Header() {
     setIsAboutOpen(!isAboutOpen);
   }
 
-  function toggleDarshboard() {
+  function toggleDashboard() {
     setIsHistoryOpen(false);
     setIsAboutOpen(false);
-    setIsDashboardOpen(!isDarshboardOpen);
+    setIsDashboardOpen(!isDashboardOpen);
   }
 
   return (
     <header className="Header">
-      <img className="Icon" onClick={toggleDarshboard} src={logo}></img>
+      <img className="Icon" onClick={toggleDashboard} src={logo}></img>
       <a className="Title" href="#Hero">
         Guardora Security
       </a>
@@ -59,7 +59,7 @@ export default function Header() {
 
       {isHistoryOpen && <History onClose={() => setIsHistoryOpen(false)} />}
       {isAboutOpen && <About onClose={() => setIsAboutOpen(false)} />}
-      {isDarshboardOpen && (
+      {isDashboardOpen && (
         <Dashboard stats={stats} onClose={() => setIsDashboardOpen(false)} />
       )}
     </header>

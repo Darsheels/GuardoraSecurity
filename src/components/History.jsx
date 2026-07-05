@@ -3,6 +3,9 @@ import api from "../api";
 
 export default function History({ onClose }) {
   const [history, setHistory] = useState([]);
+  const [removingIds, setRemovingIds] = useState([]);
+  const [isClearing, setIsClearing] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const panelRef = useRef(null);
 
   useEffect(() => {
@@ -29,7 +32,7 @@ export default function History({ onClose }) {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (panelRef.current && !panelRef.current.contains(event.target)) {
-        onClose();
+        setIsClosing(true);
       }
     };
 
@@ -40,26 +43,49 @@ export default function History({ onClose }) {
     };
   }, [onClose]);
 
+  const handleTransitionEnd = () => {
+    if (isClosing) {
+      onClose();
+    }
+  };
+
   const clearHistory = async () => {
     try {
+      setIsClearing(true);
       await api.delete("/API/scans");
-      setHistory([]);
+      setTimeout(() => {
+        setHistory([]);
+        setRemovingIds([]);
+        setIsClearing(false);
+      }, 250);
     } catch (error) {
       console.error("Error clearing history:", error);
+      setIsClearing(false);
     }
   };
 
   const DeleteItem = async (id) => {
     try {
+      setRemovingIds((prev) => [...prev, id]);
       await api.delete(`/API/scans/${id}`);
-      setHistory(history.filter((scan) => scan.id !== id));
+      setTimeout(() => {
+        setHistory((prev) => prev.filter((scan) => scan.id !== id));
+        setRemovingIds((prev) => prev.filter((itemId) => itemId !== id));
+      }, 250);
     } catch (error) {
       console.error("Error deleting item:", error);
+      setRemovingIds((prev) => prev.filter((itemId) => itemId !== id));
     }
   };
 
+  const isRemoving = (id) => isClearing || removingIds.includes(id);
+
   return (
-    <div className="History" ref={panelRef}>
+    <div
+      className={`History${isClosing ? " closing" : ""}`}
+      ref={panelRef}
+      onTransitionEnd={handleTransitionEnd}
+    >
       <div className="panel-header">
         <div>
           <h2 className="panel-title">Scan History</h2>
@@ -75,7 +101,7 @@ export default function History({ onClose }) {
           </button>
           <button
             className="History-Close"
-            onClick={onClose}
+            onClick={() => setIsClosing(true)}
             aria-label="Close history"
           >
             ✕
@@ -88,12 +114,16 @@ export default function History({ onClose }) {
           <p>No scan history available.</p>
         ) : (
           history.map((scan) => (
-            <div key={scan.id} className="History-Item">
+            <div
+              key={scan.id}
+              className={`History-Item${isRemoving(scan.id) ? " removing" : ""}`}
+            >
               <button
                 className="History-Delete-Button"
                 onClick={() => DeleteItem(scan.id)}
                 aria-label={`Delete scan ${scan.id}`}
                 title="Delete scan"
+                disabled={isClearing || removingIds.includes(scan.id)}
               >
                 ✕
               </button>
