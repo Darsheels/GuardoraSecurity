@@ -3,6 +3,7 @@ import jsQR from "jsqr";
 import SafeShield from "./SafeShield";
 import UnsafeShield from "./UnsafeShield";
 import WarningShield from "./WarningShield";
+import ProcessingLoader from "./ProcessingLoader";
 import api from "../api";
 import { useScanStats } from "../contexts/ScanStatsContext";
 
@@ -366,9 +367,7 @@ export default function QRScanner() {
         </a>
 
         {status === "processing" && (
-          <p className="Risk-Pending">
-            ⏳ VirusTotal analysis pending — check back shortly.
-          </p>
+          <ProcessingLoader message="VirusTotal analysis pending — check back shortly." />
         )}
 
         {status === "Safe" && (

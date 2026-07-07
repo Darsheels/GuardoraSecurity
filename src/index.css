@@ -251,6 +251,8 @@ body {
   background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
   display: block;
+  align-items: center;
+  justify-content: center;
   font:
     600 clamp(13px, 2.5vw, 16px) Arial,
     sans-serif;
@@ -287,7 +289,6 @@ body {
 
 .Header-Items {
   display: flex;
-  /* keep items on a single row; allow horizontal scroll on narrow screens */
   flex-wrap: nowrap;
   gap: 2px;
   margin-left: auto;
@@ -648,6 +649,60 @@ body {
 
 .Risk-Pending {
   color: #f59e0b;
+}
+
+.ProcessingLoader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+}
+
+.ProcessingLoader-Ring {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.16);
+  border-top-color: #f59e0b;
+  border-right-color: #f59e0b;
+  display: grid;
+  place-items: center;
+  animation: spin 0.9s linear infinite;
+  flex-shrink: 0;
+}
+
+.ProcessingLoader-Core {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+}
+
+.ProcessingLoader-Text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ProcessingLoader-Title {
+  color: #fff;
+  font-weight: 700;
+}
+
+.ProcessingLoader-Message {
+  color: #fcd34d;
+  font-size: 0.95rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .link {

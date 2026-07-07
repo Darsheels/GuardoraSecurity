@@ -3,6 +3,7 @@ import api from "../api";
 import SafeShield from "./SafeShield";
 import UnsafeShield from "./UnsafeShield";
 import WarningShield from "./WarningShield";
+import ProcessingLoader from "./ProcessingLoader";
 import { useScanStats } from "../contexts/ScanStatsContext";
 
 const poll_interval_ms = 15000;
@@ -237,9 +238,7 @@ export default function FileScanner() {
         <p>Source: {result?.source}</p>
 
         {status === "processing" && (
-          <p className="Risk-Pending">
-            ⏳ Analysis pending — check back shortly.
-          </p>
+          <ProcessingLoader message="Analysis pending — check back shortly." />
         )}
 
         {status === "Safe" && <SafeShield />}
