@@ -3,8 +3,6 @@ import { ScanURL, GetURLAnalysisResult, GetScanResults, clearScanResults, delete
 
 const router = express.Router();
 
-console.log("URL SCAN ROUTE LOADED");
-
 router.get("/URLscan/result/:id", GetURLAnalysisResult);
 router.get("/URLscan", ScanURL);
 router.get("/scans", GetScanResults);

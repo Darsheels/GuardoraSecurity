@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 app.set("trust proxy", 1);
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
 const corsOptions = process.env.FRONTEND_URL
   ? { origin: process.env.FRONTEND_URL }

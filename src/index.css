@@ -46,7 +46,36 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+button,
+a,
+.Header,
+.Header-Item,
+.Title,
+.Icon,
+.panel-close,
+.About-Close,
+.History-Close,
+.History-Clear,
+.History-Delete-Button,
+.StartButton,
+.StopButton,
+.ScanButton,
+.FileScanButton,
+.HashScanButton {
   user-select: none;
+}
+
+.URLScanResult,
+.FileScanResult,
+.HashScanResult,
+.QRScanner-Data,
+.FileScanResult-Hash,
+.link,
+.History-Content,
+.About-Content {
+  user-select: text;
 }
 
 * {

@@ -3,7 +3,7 @@ import History from "./History";
 import About from "./About";
 import Hero from "./Hero";
 import logo from "../assets/GuardoraIcon.png";
-import Dashboard from "./Darshboard";
+import Dashboard from "./Dashboard";
 import { useScanStats } from "../contexts/ScanStatsContext";
 
 export default function Header() {

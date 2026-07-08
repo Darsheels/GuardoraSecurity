@@ -266,10 +266,10 @@ export async function deleteScan(req, res) {
     return res.status(400).json({ error: "Invalid ID" });
   }
 
-  const query = `DELETE FROM scans WHERE id = $1`;
+  const query = `DELETE FROM scans WHERE id = $1 AND session_id = $2`;
 
   try {
-    await db.query(query, [id]);
+    await db.query(query, [id, req.headers["x-session-id"]]);
     res.json({ result: "Scan deleted successfully" });
   } catch (err) {
     console.error("Error deleting scan:", err);
