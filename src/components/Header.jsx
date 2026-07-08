@@ -16,6 +16,7 @@ export default function Header() {
     { name: "QR Scan", link: "#QRScanner" },
     { name: "URL Scan", link: "#URLScanner" },
     { name: "File Scan", link: "#FileScanner" },
+    { name: "Hash Scan", link: "#HashScanner" },
   ];
 
   function toggleHistory() {

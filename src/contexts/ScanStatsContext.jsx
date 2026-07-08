@@ -8,13 +8,14 @@ const defaultStats = {
   totalFilesScanned: 0,
   totalURLsScanned: 0,
   totalQRCodesScanned: 0,
+  totalHashesScanned: 0,
 };
 
 export function ScanStatsProvider({ children }) {
   const [stats, setStats] = useState(() => {
     try {
       const stored = window.localStorage.getItem("scanStats");
-      return stored ? JSON.parse(stored) : defaultStats;
+      return stored ? { ...defaultStats, ...JSON.parse(stored) } : defaultStats;
     } catch {
       return defaultStats;
     }
@@ -37,6 +38,8 @@ export function ScanStatsProvider({ children }) {
       totalURLsScanned: current.totalURLsScanned + (scanType === "url" ? 1 : 0),
       totalQRCodesScanned:
         current.totalQRCodesScanned + (scanType === "qr" ? 1 : 0),
+      totalHashesScanned:
+        current.totalHashesScanned + (scanType === "hash" ? 1 : 0),
     }));
   };
 

@@ -68,6 +68,10 @@ export default function Dashboard({ stats, onClose }) {
             <span className="stat-label">QR Codes Scanned</span>
             <strong className="stat-value">{stats.totalQRCodesScanned}</strong>
           </article>
+          <article className="stat-card">
+            <span className="stat-label">Hashes Scanned</span>
+            <strong className="stat-value">{stats.totalHashesScanned}</strong>
+          </article>
         </div>
         <p className="panel-note">Counts are stored locally in this browser.</p>
       </div>

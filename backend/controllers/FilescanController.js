@@ -206,6 +206,43 @@ export async function FileScan(req, res) {
   }
 }
 
+function buildScanOutcome(stats) {
+  const total =
+    stats.malicious + stats.suspicious + stats.harmless + stats.undetected;
+
+  let risk = "Low";
+  if (stats.malicious > 0) risk = "Critical";
+  else if (stats.suspicious > 0) risk = "High";
+
+  const status =
+    risk === "Critical"
+      ? "Dangerous"
+      : risk === "High"
+        ? "Potentially Unwanted"
+        : "Safe";
+
+  return {
+    risk,
+    status,
+    detections: `${stats.malicious}/${total}`,
+    stats: {
+      detections: `${stats.malicious}/${total}`,
+      malicious: stats.malicious,
+      suspicious: stats.suspicious,
+      harmless: stats.harmless,
+      undetected: stats.undetected,
+    },
+  };
+}
+
+async function fetchVTFileReport(hash) {
+  const response = await axios.get(
+    `https://www.virustotal.com/api/v3/files/${hash}`,
+    { headers: { "x-apikey": process.env.VirusTotal_API_KEY } },
+  );
+  return response.data.data.attributes;
+}
+
 export async function GetAnalysisResult(req, res) {
   const { id } = req.params;
   const { filename } = req.query;
@@ -219,67 +256,40 @@ export async function GetAnalysisResult(req, res) {
   try {
     const response = await axios.get(
       `https://www.virustotal.com/api/v3/analyses/${id}`,
-      {
-        headers: {
-          "x-apikey": process.env.VirusTotal_API_KEY,
-        },
-      },
+      { headers: { "x-apikey": process.env.VirusTotal_API_KEY } },
     );
 
     const attributes = response.data.data.attributes;
-    const vtStatus = attributes.status;
 
-    if (vtStatus !== "completed") {
+    if (attributes.status !== "completed") {
       return res.json({
         status: "processing",
         message: "Analysis still in progress, please check back shortly",
       });
     }
 
-    const total =
-      attributes.stats.malicious +
-      attributes.stats.suspicious +
-      attributes.stats.harmless +
-      attributes.stats.undetected;
-
-    const stats = attributes.stats;
-
-    let risk = "Low";
-    let message = "File scanned successfully";
+    const outcome = buildScanOutcome(attributes.stats);
     const sessionId = req.headers["x-session-id"];
-
-    if (stats.malicious > 0) {
-      risk = "Critical";
-    } else if (stats.suspicious > 0) {
-      risk = "High";
-    }
-
-    const status =
-      risk === "Critical"
-        ? "Dangerous"
-        : risk === "High"
-          ? "Potentially Unwanted"
-          : "Safe";
 
     await db.query(
       `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
-      ["File", filename, risk, status, message, sessionId],
+      [
+        "File",
+        filename,
+        outcome.risk,
+        outcome.status,
+        "File scanned successfully",
+        sessionId,
+      ],
     );
 
     return res.json({
-      status: status,
-      risk: risk,
+      status: outcome.status,
+      risk: outcome.risk,
       message: "File scanned successfully",
-      detections: `${stats.malicious}/${total}`,
+      detections: outcome.detections,
       source: "VirusTotal",
-
-      stats: {
-        detections: `${stats.malicious}/${total}`,
-        malicious: stats.malicious,
-        suspicious: stats.suspicious,
-        harmless: stats.harmless,
-        undetected: stats.undetected,
-      },
+      stats: outcome.stats,
     });
   } catch (err) {
     console.error(
@@ -289,6 +299,73 @@ export async function GetAnalysisResult(req, res) {
     res.status(500).json({
       status: "error",
       message: "Error fetching analysis result",
+      source: "VirusTotal",
+    });
+  }
+}
+
+export async function GetHashResult(req, res) {
+  const { hash } = req.params;
+  const HASH_REGEX = /^[a-fA-F0-9]{32}$|^[a-fA-F0-9]{40}$|^[a-fA-F0-9]{64}$/;
+
+  if (!hash) {
+    return res
+      .status(400)
+      .json({ status: "error", message: "Hash is required" });
+  }
+
+  const normalizedHash = hash.trim().toLowerCase();
+
+  if (!HASH_REGEX.test(normalizedHash)) {
+    return res.status(400).json({
+      status: "error",
+      message:
+        "Invalid hash format. Please provide a valid MD5, SHA-1, or SHA-256 hash.",
+    });
+  }
+
+  try {
+    const attributes = await fetchVTFileReport(normalizedHash);
+    const outcome = buildScanOutcome(attributes.last_analysis_stats);
+    const sessionId = req.headers["x-session-id"];
+
+    await db.query(
+      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+      [
+        "Hash",
+        normalizedHash,
+        outcome.risk,
+        outcome.status,
+        "File scanned successfully",
+        sessionId,
+      ],
+    );
+
+    return res.json({
+      status: outcome.status,
+      risk: outcome.risk,
+      message: "File scanned successfully",
+      detections: outcome.detections,
+      source: "VirusTotal",
+      stats: outcome.stats,
+    });
+  } catch (err) {
+    if (err.response?.status === 404) {
+      return res.status(404).json({
+        status: "not_found",
+        message:
+          "No scan results found for this hash. It may not have been analyzed by VirusTotal yet.",
+        source: "VirusTotal",
+      });
+    }
+
+    console.error(
+      "Error fetching hash result:",
+      err.response?.data || err.message,
+    );
+    return res.status(500).json({
+      status: "error",
+      message: "Error fetching hash result",
       source: "VirusTotal",
     });
   }

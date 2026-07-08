@@ -23,7 +23,6 @@ app.use(cors(corsOptions));
 app.use(apiLimiter);
 
 app.use("/API/URLscan", scanLimiter);
-app.use("/API/filescan", fileLimiter);
 
 app.use("/API", scanURL);
 app.use("/API", scanFile);

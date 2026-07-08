@@ -496,7 +496,8 @@ body {
 
 .QRScanner,
 .URLScanner,
-.FileScanner {
+.FileScanner,
+.HashScanner {
   width: min(90vw, 800px);
   min-height: 500px;
   margin: clamp(80px, 14vw, 160px) auto;
@@ -510,7 +511,8 @@ body {
 
 .QRScanner-Title,
 .URLScanner-Title,
-.FileScanner-Title {
+.FileScanner-Title,
+.HashScanner-Title {
   font:
     bold clamp(20px, 5vw, 30px) Arial,
     sans-serif;
@@ -547,7 +549,8 @@ body {
 .StartButton,
 .StopButton,
 .ScanButton,
-.FileScanButton {
+.FileScanButton,
+.HashScanButton {
   width: 140px;
   height: 45px;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -570,7 +573,8 @@ body {
 .StartButton:hover,
 .StopButton:hover,
 .ScanButton:hover,
-.FileScanButton:hover {
+.FileScanButton:hover,
+.HashScanButton:hover {
   background-color: rgba(255, 255, 255, 0.09);
   border-color: rgba(255, 255, 255, 0.24);
   color: #fff;
@@ -580,14 +584,17 @@ body {
 .StartButton:active,
 .StopButton:active,
 .ScanButton:active,
-.FileScanButton:active {
+.FileScanButton:active,
+.HashScanButton:active {
   background-color: rgba(255, 255, 255, 0.14);
   transform: translateY(0);
 }
 
 .QRScanner-Data,
 .URLScanResult,
-.FileScanResult {
+.FileScanResult,
+.HashScanResult
+ {
   font:
     clamp(13px, 3vw, 16.5px) Arial,
     sans-serif;
@@ -616,7 +623,8 @@ body {
 }
 
 .URLInput,
-.FileScannerInput {
+.FileScannerInput,
+.HashInput {
   width: 100%;
   max-width: 500px;
   height: 45px;
@@ -634,6 +642,24 @@ body {
 
 .FileScannerInput {
   cursor: pointer;
+}
+
+.FileScanIcon {
+  width: 6vh;
+  height: 6vh;
+  margin: 0 auto;
+  display: block;
+}
+
+.FileScanIcon:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+.FileScanIcon:active {
+  transform: scale(1);
+  transition: transform 0.1s ease;
 }
 
 .Risk-Low {

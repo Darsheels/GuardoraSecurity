@@ -45,11 +45,12 @@ export default function About({ onClose }) {
       </div>
 
       <div className="About-Content">
-        Guardora Security is a lightweight, threat-scanning platform designed to
-        help individuals and small teams instantly detect phishing attempts,
-        malicious URLs, and dangerous QR codes before they cause damage. Built
-        for speed, clarity, and real‑world protection, Guardora gives users a
-        simple way to verify suspicious links and stay safe online.
+        Guardora Security is a lightweight cybersecurity platform designed to
+        help individuals and small teams identify phishing attempts, malicious
+        URLs, dangerous QR codes, and suspicious files before they become a
+        threat. Built for speed, accuracy, and real-world protection, Guardora
+        provides clear, easy-to-understand security insights, allowing users to
+        verify digital content with confidence and stay safer online.
       </div>
     </div>
   );
