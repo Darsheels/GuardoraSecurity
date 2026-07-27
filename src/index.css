@@ -105,6 +105,77 @@ body {
   border-bottom: 1px solid rgb(92, 92, 92);
 }
 
+.Header-MenuToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.Header-MenuToggle:hover {
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translateY(-1px);
+}
+
+.Header-Sidebar-Overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1100;
+}
+
+.Header-Sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: auto;
+  width: min(78vw, 280px);
+  padding: 16px;
+  background: rgba(10, 10, 10, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: none;
+  border-radius: 0 24px 24px 0;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1200;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+}
+
+.Header-Sidebar.open {
+  transform: translateX(0);
+}
+
+.Header-Sidebar-Item {
+  width: 100%;
+  justify-content: flex-start;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.Header-Sidebar-Item:hover {
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
 @media (min-width: 500px) {
   .Header {
     height: 70px;
@@ -317,7 +388,7 @@ body {
 }
 
 .Header-Items {
-  display: flex;
+  display: none;
   flex-wrap: nowrap;
   gap: 2px;
   margin-left: auto;
@@ -332,7 +403,17 @@ body {
 }
 @media (min-width: 768px) {
   .Header-Items {
+    display: flex;
     gap: 20px;
+  }
+
+  .Header-MenuToggle {
+    display: none;
+  }
+
+  .Header-Sidebar,
+  .Header-Sidebar-Overlay {
+    display: none;
   }
 }
 

@@ -10,6 +10,7 @@ export default function Header() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { stats } = useScanStats();
 
   const nav_items = [
@@ -23,18 +24,29 @@ export default function Header() {
     setIsAboutOpen(false);
     setIsDashboardOpen(false);
     setIsHistoryOpen(!isHistoryOpen);
+    setIsMenuOpen(false);
   }
 
   function toggleAbout() {
     setIsHistoryOpen(false);
     setIsDashboardOpen(false);
     setIsAboutOpen(!isAboutOpen);
+    setIsMenuOpen(false);
   }
 
   function toggleDashboard() {
     setIsHistoryOpen(false);
     setIsAboutOpen(false);
     setIsDashboardOpen(!isDashboardOpen);
+    setIsMenuOpen(false);
+  }
+
+  function toggleMenu() {
+    setIsMenuOpen(!isMenuOpen);
+  }
+
+  function closeMenu() {
+    setIsMenuOpen(false);
   }
 
   return (
@@ -44,9 +56,18 @@ export default function Header() {
         Guardora Security
       </a>
 
+      <button
+        type="button"
+        className="Header-MenuToggle"
+        onClick={toggleMenu}
+        aria-label="Open navigation menu"
+      >
+        ☰
+      </button>
+
       <div className="Header-Items">
         {nav_items.map((item, index) => (
-          <a key={index} href={item.link} className="Header-Item">
+          <a key={index} href={item.link} className="Header-Item" onClick={closeMenu}>
             {item.name}
           </a>
         ))}
@@ -57,6 +78,29 @@ export default function Header() {
           About
         </button>
       </div>
+
+      {isMenuOpen && (
+        <div className="Header-Sidebar-Overlay" onClick={closeMenu}></div>
+      )}
+
+      <aside className={`Header-Sidebar ${isMenuOpen ? "open" : ""}`}>
+        {nav_items.map((item, index) => (
+          <a
+            key={index}
+            href={item.link}
+            className="Header-Item Header-Sidebar-Item"
+            onClick={closeMenu}
+          >
+            {item.name}
+          </a>
+        ))}
+        <button className="Header-Item Header-Sidebar-Item" onClick={toggleHistory}>
+          History
+        </button>
+        <button className="Header-Item Header-Sidebar-Item" onClick={toggleAbout}>
+          About
+        </button>
+      </aside>
 
       {isHistoryOpen && <History onClose={() => setIsHistoryOpen(false)} />}
       {isAboutOpen && <About onClose={() => setIsAboutOpen(false)} />}
