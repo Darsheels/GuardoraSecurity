@@ -15,9 +15,21 @@ app.set("trust proxy", 1);
 
 app.use(express.json({ limit: "10mb" }));
 
-const corsOptions = process.env.FRONTEND_URL
-  ? { origin: process.env.FRONTEND_URL }
-  : { origin: true };
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "https://www.guardorasec.com",
+  "https://guardorasec.com"
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, false); 
+    }
+  }
+};
 
 app.use(cors(corsOptions));
 app.use(apiLimiter);
