@@ -20,6 +20,7 @@
     "pg": "^8.22.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-router-dom": "^7.18.2",
     "react-webcam": "^7.2.0",
     "sqlite3": "^6.0.1",
     "validator": "^13.15.35"

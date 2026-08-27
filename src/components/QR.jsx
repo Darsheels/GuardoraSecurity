@@ -6,6 +6,7 @@ import WarningShield from "./WarningShield";
 import ProcessingLoader from "./ProcessingLoader";
 import api from "../api";
 import { useScanStats } from "../contexts/ScanStatsContext";
+import ShareButton from "./ShareButton";
 
 const poll_interval_ms = 15000;
 const max_polling_attempts = 20;
@@ -72,6 +73,7 @@ export default function QRScanner() {
       const threats = Array.isArray(data?.threats) ? data.threats : [];
 
       setQrCodeData({
+        id: data?.id,
         risk: data?.risk_level || "unknown",
         status: data?.status || "unknown",
         message: data?.message || "",
@@ -230,6 +232,7 @@ export default function QRScanner() {
           const threats = Array.isArray(data?.threats) ? data.threats : [];
 
           setQrCodeData({
+            id: data?.id,
             risk: data?.risk_level || "unknown",
             status: data?.status || "unknown",
             message: data?.message || "",
@@ -242,6 +245,7 @@ export default function QRScanner() {
           const isRateLimited = error.response?.status === 429;
           console.error("Error scanning QR code URL:", error);
           setQrCodeData({
+            id: null,
             risk: "unknown",
             status: "error",
             message: isRateLimited
@@ -365,6 +369,8 @@ export default function QRScanner() {
         >
           {url}
         </a>
+
+        {qrCodeData?.id && <ShareButton scanId={qrCodeData.id} />}
 
         {status === "processing" && (
           <ProcessingLoader message="VirusTotal analysis pending — check back shortly." />

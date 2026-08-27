@@ -84,12 +84,13 @@ export async function FileScan(req, res) {
             ? "Potentially Unwanted"
             : "Safe";
 
-      await db.query(
-        `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+      const insertResult = await db.query(
+        `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
         ["File", filename, risk, status, message, sessionId],
       );
 
       return res.json({
+        id: insertResult.rows[0].id,
         filename: req.file.originalname,
         hash: hash,
         fileSize: req.file.size + " bytes",
@@ -271,8 +272,8 @@ export async function GetAnalysisResult(req, res) {
     const outcome = buildScanOutcome(attributes.stats);
     const sessionId = req.headers["x-session-id"];
 
-    await db.query(
-      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+    const insertResult = await db.query(
+      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
       [
         "File",
         filename,
@@ -284,6 +285,7 @@ export async function GetAnalysisResult(req, res) {
     );
 
     return res.json({
+      id: insertResult.rows[0].id,
       status: outcome.status,
       risk: outcome.risk,
       message: "File scanned successfully",
@@ -329,8 +331,8 @@ export async function GetHashResult(req, res) {
     const outcome = buildScanOutcome(attributes.last_analysis_stats);
     const sessionId = req.headers["x-session-id"];
 
-    await db.query(
-      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+    const insertResult = await db.query(
+      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
       [
         "Hash",
         normalizedHash,
@@ -342,6 +344,7 @@ export async function GetHashResult(req, res) {
     );
 
     return res.json({
+      id: insertResult.rows[0].id,
       status: outcome.status,
       risk: outcome.risk,
       message: "File scanned successfully",

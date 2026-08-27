@@ -5,6 +5,7 @@ import UnsafeShield from "./UnsafeShield";
 import WarningShield from "./WarningShield";
 import ProcessingLoader from "./ProcessingLoader";
 import { useScanStats } from "../contexts/ScanStatsContext";
+import ShareButton from "./ShareButton";
 
 const poll_interval_ms = 15000;
 const max_polling_attempts = 20;
@@ -55,6 +56,7 @@ export default function FileScanner() {
       }
 
       setResult({
+        id: data?.id,
         status: data?.status || "Unknown",
         risk: data?.risk || "Unknown",
         message: data?.message || "Unknown",
@@ -80,6 +82,7 @@ export default function FileScanner() {
   const handleScan = async () => {
     if (!file) {
       setResult({
+        id: null,
         status: "Error, No File Selected",
         risk: "Unknown",
         message: "Unknown",
@@ -95,6 +98,7 @@ export default function FileScanner() {
 
     if (file && file.size > 32 * 1024 * 1024) {
       setResult({
+        id: null,
         status: "Error",
         risk: "Unknown",
         message: "File size exceeds 32MB limit",
@@ -122,6 +126,7 @@ export default function FileScanner() {
 
     try {
       setResult({
+        id: null,
         status: "scanning",
         risk: "unknown",
         message: "Scanning File...",
@@ -145,6 +150,7 @@ export default function FileScanner() {
 
       if (data?.status === "processing") {
         setResult({
+          id: data?.id,
           status: "processing",
           risk: data?.risk || "Unknown",
           message: "Processing file...",
@@ -173,6 +179,7 @@ export default function FileScanner() {
       }
 
       setResult({
+        id: data?.id,
         status: data?.status || "Unknown",
         risk: data?.risk || "Unknown",
         message: data?.message || "Unknown",
@@ -191,6 +198,7 @@ export default function FileScanner() {
 
       console.error("Error scanning file:", error);
       setResult({
+        id: null,
         status: "Error",
         risk: "Unknown",
         message: isRateLimited
@@ -236,6 +244,8 @@ export default function FileScanner() {
         <p className="FileScanResult-Hash">SHA256: {result?.hash}</p>
         <p>Message: {result?.message}</p>
         <p>Source: {result?.source}</p>
+
+        {result?.id && <ShareButton scanId={result.id} />}
 
         {status === "processing" && (
           <ProcessingLoader message="Analysis pending — check back shortly." />

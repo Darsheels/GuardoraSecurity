@@ -5,6 +5,7 @@ import UnsafeShield from "./UnsafeShield";
 import WarningShield from "./WarningShield";
 import ProcessingLoader from "./ProcessingLoader";
 import { useScanStats } from "../contexts/ScanStatsContext";
+import ShareButton from "./ShareButton";
 
 const HASH_REGEX = /^[a-fA-F0-9]{32}$|^[a-fA-F0-9]{40}$|^[a-fA-F0-9]{64}$/;
 
@@ -20,6 +21,7 @@ export default function HashScanner() {
 
     if (!trimmedHash) {
       setResult({
+        id: null,
         status: "Error",
         risk: "Unknown",
         message: "Please enter a hash to scan",
@@ -32,6 +34,7 @@ export default function HashScanner() {
 
     if (!HASH_REGEX.test(trimmedHash)) {
       setResult({
+        id: null,
         status: "Error",
         risk: "Unknown",
         message:
@@ -46,6 +49,7 @@ export default function HashScanner() {
     setIsLoading(true);
     setStatus("scanning");
     setResult({
+      id: null,
       status: "scanning",
       risk: "Unknown",
       message: "Checking VirusTotal database...",
@@ -58,6 +62,7 @@ export default function HashScanner() {
       const data = response.data;
 
       setResult({
+        id: data?.id,
         status: data?.status || "Unknown",
         risk: data?.risk || "Unknown",
         message: data?.message || "Unknown",
@@ -75,13 +80,14 @@ export default function HashScanner() {
       const isNotFound = error.response?.status === 404;
 
       setResult({
+        id: null,
         status: isNotFound ? "Not Found" : "Error",
         risk: "Unknown",
         message: isRateLimited
           ? "Too many requests from this IP, please try again later."
           : isNotFound
             ? error.response?.data?.message ||
-              "No scan results found for this hash."
+            "No scan results found for this hash."
             : "Error scanning hash. Please try again.",
         detections: "Unknown",
         source: "VirusTotal",
@@ -126,6 +132,8 @@ export default function HashScanner() {
         <p>Detection: {result?.detections}</p>
         <p>Message: {result?.message}</p>
         <p>Source: {result?.source}</p>
+
+        {result?.id && <ShareButton scanId={result.id} />}  
 
         {status === "scanning" && (
           <ProcessingLoader message="Checking VirusTotal database..." />

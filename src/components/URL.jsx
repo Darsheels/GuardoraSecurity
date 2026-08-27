@@ -6,6 +6,7 @@ import WarningShield from "./WarningShield";
 import ProcessingLoader from "./ProcessingLoader";
 import api from "../api";
 import { useScanStats } from "../contexts/ScanStatsContext";
+import ShareButton from "./ShareButton";
 
 const poll_interval_ms = 15000;
 const max_polling_attempts = 20;
@@ -61,6 +62,7 @@ export default function URLScanner() {
       const threats = Array.isArray(data?.threats) ? data.threats : [];
 
       setScanResult({
+        id: data?.id,
         risk: data?.risk_level || "unknown",
         status: data?.status || "unknown",
         message: data?.message || "",
@@ -84,6 +86,7 @@ export default function URLScanner() {
   const handleScan = async () => {
     if (!validator.isURL(url)) {
       setScanResult({
+        id: null,
         risk: "unknown",
         status: "invalid",
         message: "Please enter a valid URL",
@@ -100,6 +103,7 @@ export default function URLScanner() {
 
     try {
       setScanResult({
+        id: null,
         risk: "unknown",
         status: "scanning",
         message: "Scanning URL...",
@@ -115,6 +119,7 @@ export default function URLScanner() {
 
       if (data?.status === "processing") {
         setScanResult({
+          id: null,
           risk: "unknown",
           status: "processing",
           message: "URL submitted to VirusTotal, analysis pending...",
@@ -137,6 +142,7 @@ export default function URLScanner() {
       const threats = Array.isArray(data?.threats) ? data.threats : [];
 
       setScanResult({
+        id: data?.id,
         risk: data?.risk_level || "unknown",
         status: data?.status || "unknown",
         message: data?.message || "",
@@ -151,6 +157,7 @@ export default function URLScanner() {
 
       console.error("Error scanning URL:", error);
       setScanResult({
+        id: null,
         risk: "unknown",
         status: "error",
         message: isRateLimited
@@ -209,6 +216,8 @@ export default function URLScanner() {
         )}
 
         <p>Source: {scanResult?.source}</p>
+
+        {scanResult?.id && <ShareButton scanId={scanResult.id} />}  
 
         {status === "processing" && (
           <ProcessingLoader message="VirusTotal analysis pending — check back shortly." />

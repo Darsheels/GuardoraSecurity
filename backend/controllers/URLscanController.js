@@ -1,5 +1,72 @@
 import axios from "axios";
 import db from "../db.js";
+import crypto from "crypto";
+
+export async function PatchScanShare(req, res) {
+  const { id } = req.params;
+  const sessionId = req.headers["x-session-id"];
+
+  if (!sessionId) {
+    return res.status(400).json({ result: "Session ID is required" });
+  }
+  if (!id) {
+    return res.status(400).json({ result: "Scan ID is required" });
+  }
+
+  try {
+    const existing = await db.all(
+      `SELECT id, public_id, is_shared FROM scans WHERE id = $1 AND session_id = $2`,
+      [id, sessionId],
+    );
+
+    if (!existing.length) {
+      return res.status(404).json({ result: "Scan not found" });
+    }
+
+    if (existing[0].is_shared && existing[0].public_id) {
+      return res.json({ publicId: existing[0].public_id });
+    }
+
+    const publicId = crypto.randomUUID();
+
+    await db.query(
+      `UPDATE scans SET public_id = $1, is_shared = true WHERE id = $2 AND session_id = $3`,
+      [publicId, id, sessionId],
+    );
+
+    res.json({ publicId });
+  } catch (err) {
+    console.error("Error sharing scan:", err);
+    res.status(500).json({ result: "Error sharing scan" });
+  }
+}
+
+export async function GetPublicScan(req, res) {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ result: "Public ID is required" });
+  }
+
+  const query = `
+    SELECT scan_type, name, risk_level, status, message, created_at 
+    FROM scans 
+    WHERE public_id = $1 AND is_shared = true
+  `;
+
+  try {
+    const rows = await db.all(query, [id]);
+
+    if (!rows.length) {
+      return res.status(404).json({ result: "Scan not found or not shared" });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error("Error fetching public scan:", err);
+    res.status(500).json({ result: "Error fetching public scan" });
+  }
+}
 
 async function checkGoogleSafeBrowsing(url) {
   const response = await axios.post(
@@ -126,8 +193,8 @@ export async function ScanURL(req, res) {
 
     const combined = combineResults(matches, vtResult);
 
-    await db.query(
-      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+    const insertResult = await db.query(
+      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
       [
         "URL",
         url,
@@ -140,6 +207,7 @@ export async function ScanURL(req, res) {
 
     return res.json({
       success: true,
+      id: insertResult.rows[0].id,
       url,
       ...combined,
       source: "Google Safe Browsing + VirusTotal",
@@ -190,8 +258,8 @@ export async function GetURLAnalysisResult(req, res) {
     });
     const sessionId = req.headers["x-session-id"];
 
-    await db.query(
-      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6)`,
+    const insertResult = await db.query(
+      `INSERT INTO scans (scan_type, name, risk_level, status, message, session_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
       [
         "URL",
         url,
@@ -204,6 +272,7 @@ export async function GetURLAnalysisResult(req, res) {
 
     return res.json({
       success: true,
+      id: insertResult.rows[0].id,
       url,
       ...combined,
       source: "Google Safe Browsing + VirusTotal",
@@ -213,13 +282,11 @@ export async function GetURLAnalysisResult(req, res) {
       "Error fetching URL analysis result:",
       err.response?.data || err.message,
     );
-    res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Error fetching analysis result",
-        source: "VirusTotal",
-      });
+    res.status(500).json({
+      status: "error",
+      message: "Error fetching analysis result",
+      source: "VirusTotal",
+    });
   }
 }
 
