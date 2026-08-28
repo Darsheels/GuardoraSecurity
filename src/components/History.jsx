@@ -6,6 +6,8 @@ export default function History({ onClose }) {
   const [removingIds, setRemovingIds] = useState([]);
   const [isClearing, setIsClearing] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
+  const [busyShareIds, setBusyShareIds] = useState([]);
   const panelRef = useRef(null);
 
   useEffect(() => {
@@ -78,6 +80,33 @@ export default function History({ onClose }) {
     }
   };
 
+  const copyShareLink = async (scan) => {
+    try {
+      const shareUrl = `${window.location.origin}/scan/${scan.public_id}`;
+      await navigator.clipboard.writeText(shareUrl);
+      setCopiedId(scan.id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch (error) {
+      console.error("Error copying share link:", error);
+    }
+  };
+
+  const unshareItem = async (id) => {
+    setBusyShareIds((prev) => [...prev, id]);
+    try {
+      await api.delete(`/API/scans/${id}/share`);
+      setHistory((prev) =>
+        prev.map((scan) =>
+          scan.id === id ? { ...scan, is_shared: false } : scan,
+        ),
+      );
+    } catch (error) {
+      console.error("Error unsharing scan:", error);
+    } finally {
+      setBusyShareIds((prev) => prev.filter((itemId) => itemId !== id));
+    }
+  };
+
   const isRemoving = (id) => isClearing || removingIds.includes(id);
 
   return (
@@ -140,6 +169,27 @@ export default function History({ onClose }) {
                 <strong>Risk:</strong> {scan.risk_level}
               </p>
               <p>{new Date(scan.created_at).toLocaleString()}</p>
+
+              {scan.is_shared && (
+                <div className="History-Share">
+                  <span className="History-Share-Badge">🔗 Shared</span>
+                  <button
+                    className="History-Share-Copy"
+                    onClick={() => copyShareLink(scan)}
+                  >
+                    {copiedId === scan.id ? "Copied!" : "Copy link"}
+                  </button>
+                  <button
+                    className="History-Share-Unshare"
+                    onClick={() => unshareItem(scan.id)}
+                    disabled={busyShareIds.includes(scan.id)}
+                  >
+                    {busyShareIds.includes(scan.id)
+                      ? "Unsharing..."
+                      : "Unshare"}
+                  </button>
+                </div>
+              )}
             </div>
           ))
         )}

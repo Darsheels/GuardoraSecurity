@@ -1162,6 +1162,80 @@ body {
   border-color: transparent;
 }
 
+.History-Share {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.History-Share-Badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 9px;
+  border: 1px solid rgba(134, 239, 172, 0.3);
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.1);
+  color: #86efac;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.History-Share-Copy,
+.History-Share-Unshare {
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgba(147, 197, 253, 0.35);
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.14);
+  color: #bfdbfe;
+  cursor: pointer;
+  font: 600 11px Arial, sans-serif;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.History-Share-Copy:hover,
+.History-Share-Unshare:hover:not(:disabled) {
+  border-color: rgba(191, 219, 254, 0.75);
+  background: rgba(37, 99, 235, 0.28);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.History-Share-Copy:focus-visible,
+.History-Share-Unshare:focus-visible {
+  outline: 2px solid rgba(147, 197, 253, 0.75);
+  outline-offset: 2px;
+}
+
+.History-Share-Unshare {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgb(200, 200, 200);
+}
+
+.History-Share-Unshare:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.History-Share-Copy:disabled,
+.History-Share-Unshare:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .Footer {
   width: 100%;
   height: 70px;

@@ -1,5 +1,5 @@
 import express from "express";
-import { ScanURL, GetURLAnalysisResult, GetScanResults, clearScanResults, deleteScan, GetPublicScan, PatchScanShare } from "../controllers/URLscanController.js";
+import { ScanURL, GetURLAnalysisResult, GetScanResults, clearScanResults, deleteScan, GetPublicScan, PatchScanShare, DeleteScanShare } from "../controllers/URLscanController.js";
 
 const router = express.Router();
 
@@ -10,5 +10,5 @@ router.get("/scan/public/:id", GetPublicScan);
 router.get("/scans", GetScanResults);
 router.delete("/scans", clearScanResults);
 router.delete("/scans/:id", deleteScan);
-
+router.delete("/scans/:id/share", DeleteScanShare);
 export default router;
