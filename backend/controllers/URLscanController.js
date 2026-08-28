@@ -2,6 +2,43 @@ import axios from "axios";
 import db from "../db.js";
 import crypto from "crypto";
 
+export async function DeleteScanShare(req, res) {
+  const { id } = req.params;
+  const sessionId = req.headers["x-session-id"];
+
+  if (!sessionId) {
+    return res.status(400).json({ result: "Session ID is required" });
+  }
+  if (!id) {
+    return res.status(400).json({ result: "Scan ID is required" });
+  }
+
+  try {
+    const existing = await db.all(
+      `SELECT id, is_shared FROM scans WHERE id = $1 AND session_id = $2`,
+      [id, sessionId],
+    );
+
+    if (!existing.length) {
+      return res.status(404).json({ result: "Scan not found" });
+    }
+
+    if (!existing[0].is_shared) {
+      return res.json({ result: "Scan is not currently shared" });
+    }
+
+    await db.query(
+      `UPDATE scans SET is_shared = false WHERE id = $1 AND session_id = $2`,
+      [id, sessionId],
+    );
+
+    res.json({ result: "Scan unshared successfully" });
+  } catch (err) {
+    console.error("Error unsharing scan:", err);
+    res.status(500).json({ result: "Error unsharing scan" });
+  }
+}
+
 export async function PatchScanShare(req, res) {
   const { id } = req.params;
   const sessionId = req.headers["x-session-id"];
